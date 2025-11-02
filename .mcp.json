@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "east": {
+      "command": "npx",
+      "args": ["-y", "@elaraai/east-mcp@latest"],
+      "description": "East language compilation tool - validates East function syntax and generates portable IR"
+    }
+  }
+}

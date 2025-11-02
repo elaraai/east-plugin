@@ -1,0 +1,19 @@
+{
+  "name": "east",
+  "version": "1.0.0",
+  "description": "Write and validate East code - a portable, type-safe functional language",
+  "author": {
+    "name": "Elara AI Pty Ltd",
+    "email": "support@elara.ai"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "repository": "https://github.com/elaraai/east-plugin",
+  "keywords": [
+    "east",
+    "functional-programming",
+    "portable",
+    "type-safe",
+    "IR",
+    "compilation"
+  ]
+}
