@@ -1,0 +1,15 @@
+{
+  "name": "east",
+  "description": "East language development tools for Claude Code",
+  "version": "1.0.0",
+  "plugins": [
+    {
+      "name": "east",
+      "description": "Write and validate East code - a portable, type-safe functional language",
+      "source": {
+        "source": "local",
+        "path": "."
+      }
+    }
+  ]
+}
