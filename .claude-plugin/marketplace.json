@@ -2,11 +2,15 @@
   "name": "east",
   "description": "East language development tools for Claude Code",
   "version": "1.0.0",
+  "owner": {
+    "name": "Elara AI Pty Ltd",
+    "email": "support@elara.ai"
+  },
   "plugins": [
     {
       "name": "east",
       "description": "Write and validate East code - a portable, type-safe functional language",
-      "source": "."
+      "source": "./"
     }
   ]
 }
