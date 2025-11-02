@@ -6,10 +6,7 @@
     {
       "name": "east",
       "description": "Write and validate East code - a portable, type-safe functional language",
-      "source": {
-        "source": "local",
-        "path": "."
-      }
+      "source": "."
     }
   ]
 }
