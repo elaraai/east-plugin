@@ -1,16 +1,22 @@
 {
-  "name": "east",
-  "description": "East language development tools for Claude Code",
-  "version": "1.0.0",
+  "name": "elaraai",
   "owner": {
-    "name": "Elara AI Pty Ltd",
-    "email": "support@elara.ai"
+    "name": "Elara AI",
+    "email": "support@elara.ai",
+    "url": "https://elaraai.com"
   },
   "plugins": [
     {
       "name": "east",
-      "description": "Write and validate East code - a portable, type-safe functional language",
-      "source": "./"
+      "source": "./",
+      "description": "East programming language ecosystem - types, expressions, Node.js/Python runtimes, UI components, and durable execution",
+      "version": "0.1.0",
+      "author": {
+        "name": "Elara AI",
+        "email": "support@elara.ai"
+      },
+      "license": "AGPL-3.0",
+      "keywords": ["east", "elara", "typescript", "python", "dsl", "e3"]
     }
   ]
 }

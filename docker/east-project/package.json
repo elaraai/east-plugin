@@ -1,0 +1,16 @@
+{
+  "name": "east-compile-project",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@elaraai/east": "beta",
+    "@elaraai/east-node-std": "beta",
+    "@elaraai/east-node-io": "beta",
+    "@elaraai/east-ui": "beta"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "typescript": "~5.9.2"
+  }
+}
