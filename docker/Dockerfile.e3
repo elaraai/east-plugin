@@ -64,7 +64,7 @@ RUN uv pip install \
 # Verify installations
 RUN npx east-node-cli --version || echo "east-node-cli installed"
 RUN e3 --version || echo "e3-cli installed"
-RUN python3 -c "import east_py; print('east-py installed')"
+RUN python3 -c "import east; print('east-py installed')"
 
 # Create e3 data directory
 RUN mkdir -p /root/.e3
