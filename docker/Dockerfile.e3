@@ -28,6 +28,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 
+# Create Python virtual environment
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 # Set working directory
 WORKDIR /workspace
 
@@ -49,8 +53,8 @@ RUN npm install -g \
     @elaraai/e3-api-client@beta \
     @elaraai/e3-api-server@beta
 
-# Install Python packages (BSL) from GitHub
-RUN uv pip install --system \
+# Install Python packages (BSL) from GitHub into venv
+RUN uv pip install \
     "east-py @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py" \
     "east-py-std @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-std" \
     "east-py-io @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-io" \
