@@ -1,0 +1,85 @@
+name: Update Skills
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [update-skills]
+
+jobs:
+  update-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate app token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          repositories: east,east-node,east-py,east-ui,e3
+
+      - name: Checkout east-plugin
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Checkout source repos
+        run: |
+          mkdir -p .sources
+          cd .sources
+          for repo in east east-node east-py east-ui e3; do
+            echo "Cloning $repo..."
+            git clone --depth 1 "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/elaraai/$repo.git"
+          done
+
+      - name: Copy skills
+        run: |
+          copy_skill() {
+            local src="$1"
+            local dest="$2"
+            echo "Copying $src -> skills/$dest/"
+
+            mkdir -p "skills/$dest/references"
+
+            if [ -f ".sources/$src/SKILL.md" ]; then
+              cp ".sources/$src/SKILL.md" "skills/$dest/"
+            else
+              echo "  Warning: SKILL.md not found in $src"
+            fi
+
+            if [ -d ".sources/$src/reference" ]; then
+              cp ".sources/$src/reference/"* "skills/$dest/references/" 2>/dev/null || true
+            else
+              echo "  Warning: reference/ not found in $src"
+            fi
+          }
+
+          # east -> skills/east/
+          copy_skill "east" "east"
+
+          # east-node packages
+          copy_skill "east-node/packages/east-node-std" "east-node-std"
+          copy_skill "east-node/packages/east-node-io" "east-node-io"
+
+          # east-py packages
+          copy_skill "east-py/packages/east-py-datascience" "east-py-datascience"
+
+          # east-ui -> skills/east-ui/
+          copy_skill "east-ui" "east-ui"
+
+          # e3 -> skills/e3/
+          copy_skill "e3" "e3"
+
+      - name: Configure git
+        run: |
+          git config user.name "elara-ci[bot]"
+          git config user.email "elara-ci[bot]@users.noreply.github.com"
+
+      - name: Commit and push
+        run: |
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "docs: update skills from source repos"
+            git push
+          fi
