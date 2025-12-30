@@ -3,13 +3,20 @@
 #
 # Usage:
 #   docker build -f Dockerfile.east-node -t ghcr.io/elaraai/east-node .
-#   docker run --rm -v $(pwd):/workspace ghcr.io/elaraai/east-node npx east-node-cli run program.east
+#   docker run --rm -v $(pwd):/workspace ghcr.io/elaraai/east-node npx @elaraai/east-node-cli run program.east
 
 FROM node:22-slim AS base
 
 LABEL org.opencontainers.image.source="https://github.com/elaraai/east-plugin"
 LABEL org.opencontainers.image.description="East Node.js Runtime - AGPL-3.0"
 LABEL org.opencontainers.image.licenses="AGPL-3.0"
+
+# Build args for package versions (queried from npm in workflow)
+ARG EAST_VERSION
+ARG EAST_NODE_STD_VERSION
+ARG EAST_NODE_IO_VERSION
+ARG EAST_NODE_CLI_VERSION
+ARG EAST_UI_VERSION
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -20,18 +27,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set working directory
 WORKDIR /workspace
 
-# Install global npm packages (beta versions)
+# Install global npm packages with explicit versions
 RUN npm install -g \
     typescript \
-    @elaraai/east@beta \
-    @elaraai/east-node-std@beta \
-    @elaraai/east-node-io@beta \
-    @elaraai/east-node-cli@beta \
-    @elaraai/east-ui@beta
+    @types/node \
+    @elaraai/east@${EAST_VERSION:-latest} \
+    @elaraai/east-node-std@${EAST_NODE_STD_VERSION:-latest} \
+    @elaraai/east-node-io@${EAST_NODE_IO_VERSION:-latest} \
+    @elaraai/east-node-cli@${EAST_NODE_CLI_VERSION:-latest} \
+    @elaraai/east-ui@${EAST_UI_VERSION:-latest}
 
-# Copy and install the East compile project (for type-checking user files)
-COPY east-project/ /east-project/
-RUN cd /east-project && npm install
+# Verify installations
+RUN npx @elaraai/east-node-cli --version || echo "east-node-cli installed"
+
+# Create compile environment for single-file type-checking
+RUN mkdir -p /compile && \
+    ln -s /usr/local/lib/node_modules /compile/node_modules && \
+    echo '{"compilerOptions":{"target":"esnext","module":"nodenext","strict":true,"skipLibCheck":true,"noEmit":true}}' > /compile/tsconfig.json
 
 # Default command
 CMD ["bash"]

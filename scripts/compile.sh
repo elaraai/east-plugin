@@ -13,11 +13,11 @@ if command -v docker &> /dev/null; then
             ghcr.io/elaraai/east-node \
             bash -c "npm install --silent && npx tsc -p tsconfig.json --noEmit"
     elif [ -n "$FILE" ] && [ -f "$FILE" ]; then
-        # User specified a file - copy to built-in project and compile
-        docker run --rm -v "$(pwd)/$FILE:/east-project/src/input.ts:ro" \
-            -w /east-project \
+        # User specified a file - mount and compile
+        docker run --rm -v "$(pwd)/$FILE:/compile/input.ts:ro" \
+            -w /compile \
             ghcr.io/elaraai/east-node \
-            npx tsc --noEmit
+            npx tsc
     else
         echo "Usage: east-compile.sh <file.ts>"
         echo "   or: run from a directory with package.json + tsconfig.json"

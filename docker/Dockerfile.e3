@@ -14,6 +14,19 @@ LABEL org.opencontainers.image.source="https://github.com/elaraai/east-plugin"
 LABEL org.opencontainers.image.description="e3 - East Execution Engine (BSL 1.1 + AGPL-3.0)"
 LABEL org.opencontainers.image.licenses="BSL-1.1 AND AGPL-3.0"
 
+# Build args for package versions (queried from npm in workflow)
+ARG EAST_VERSION
+ARG EAST_NODE_STD_VERSION
+ARG EAST_NODE_IO_VERSION
+ARG EAST_NODE_CLI_VERSION
+ARG EAST_UI_VERSION
+ARG E3_VERSION
+ARG E3_TYPES_VERSION
+ARG E3_CORE_VERSION
+ARG E3_CLI_VERSION
+ARG E3_API_CLIENT_VERSION
+ARG E3_API_SERVER_VERSION
+
 # Install system dependencies including Python
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -35,36 +48,46 @@ ENV PATH="/opt/venv/bin:$PATH"
 # Set working directory
 WORKDIR /workspace
 
-# Install Node.js packages (AGPL, beta versions)
+# Install Node.js packages (AGPL) with explicit versions
 RUN npm install -g \
     typescript \
-    @elaraai/east@beta \
-    @elaraai/east-node-std@beta \
-    @elaraai/east-node-io@beta \
-    @elaraai/east-node-cli@beta \
-    @elaraai/east-ui@beta
+    @types/node \
+    @elaraai/east@${EAST_VERSION:-latest} \
+    @elaraai/east-node-std@${EAST_NODE_STD_VERSION:-latest} \
+    @elaraai/east-node-io@${EAST_NODE_IO_VERSION:-latest} \
+    @elaraai/east-node-cli@${EAST_NODE_CLI_VERSION:-latest} \
+    @elaraai/east-ui@${EAST_UI_VERSION:-latest}
 
-# Install Node.js packages (BSL + AGPL - e3, beta versions)
+# Install Node.js packages (BSL + AGPL - e3) with explicit versions
 RUN npm install -g \
-    @elaraai/e3@beta \
-    @elaraai/e3-types@beta \
-    @elaraai/e3-core@beta \
-    @elaraai/e3-cli@beta \
-    @elaraai/e3-api-client@beta \
-    @elaraai/e3-api-server@beta
+    @elaraai/e3@${E3_VERSION:-latest} \
+    @elaraai/e3-types@${E3_TYPES_VERSION:-latest} \
+    @elaraai/e3-core@${E3_CORE_VERSION:-latest} \
+    @elaraai/e3-cli@${E3_CLI_VERSION:-latest} \
+    @elaraai/e3-api-client@${E3_API_CLIENT_VERSION:-latest} \
+    @elaraai/e3-api-server@${E3_API_SERVER_VERSION:-latest}
 
 # Install Python packages (BSL) from GitHub into venv
+# Note: east-py-datascience[all] includes torch, xgboost, lightgbm, sklearn, scipy, etc.
+# Pin numba/llvmlite to Python 3.11 compatible versions before installing shap
 RUN uv pip install \
+    "numba>=0.58.0" \
+    "llvmlite>=0.41.0" \
     "east-py @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py" \
     "east-py-std @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-std" \
     "east-py-io @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-io" \
-    "east-py-datascience @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-datascience" \
+    "east-py-datascience[all] @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-datascience" \
     "east-py-cli @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-cli"
 
 # Verify installations
-RUN npx east-node-cli --version || echo "east-node-cli installed"
+RUN npx @elaraai/east-node-cli --version || echo "east-node-cli installed"
 RUN e3 --version || echo "e3-cli installed"
 RUN python3 -c "import east; print('east-py installed')"
+
+# Create compile environment for single-file type-checking
+RUN mkdir -p /compile && \
+    ln -s /usr/local/lib/node_modules /compile/node_modules && \
+    echo '{"compilerOptions":{"target":"esnext","module":"nodenext","strict":true,"skipLibCheck":true,"noEmit":true}}' > /compile/tsconfig.json
 
 # Create e3 data directory
 RUN mkdir -p /root/.e3

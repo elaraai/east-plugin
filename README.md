@@ -17,7 +17,7 @@ A Claude Code plugin for the East programming language ecosystem.
 
 | Command | Description |
 |---------|-------------|
-| `/east-compile` | Compile and type-check an East function |
+| `/compile` | Compile and type-check an East function |
 | `/e3-init` | Initialize a new e3 repository |
 | `/e3-run` | Run an e3 task |
 | `/e3-start` | Start an e3 workspace |
@@ -67,7 +67,7 @@ docker pull ghcr.io/elaraai/e3
 
 # Run East Node.js programs
 docker run --rm -v $(pwd):/workspace ghcr.io/elaraai/east-node \
-  npx east-node-cli run program.east
+  npx @elaraai/east-node-cli run program.east
 
 # Run e3 pipelines
 docker run --rm -v $(pwd):/workspace -v ~/.e3:/root/.e3 ghcr.io/elaraai/e3 \
