@@ -1,6 +1,6 @@
 ---
 name: east-py-datascience
-description: Data science and machine learning platform functions for the East language (TypeScript types). Use when writing East programs that need optimization (MADS, Optuna, SimAnneal, Scipy), machine learning (XGBoost, LightGBM, NGBoost, Torch MLP, GP), ML utilities (Sklearn preprocessing, metrics, splits), or model explainability (SHAP). Triggers for: (1) Writing East programs with @elaraai/east-py-datascience, (2) Derivative-free optimization with MADS, (3) Bayesian optimization with Optuna, (4) Discrete/combinatorial optimization with SimAnneal, (5) Gradient boosting with XGBoost or LightGBM, (6) Probabilistic predictions with NGBoost or GP, (7) Neural networks with Torch MLP, (8) Data preprocessing and metrics with Sklearn, (9) Model explainability with Shap.
+description: Data science and machine learning platform functions for the East language (TypeScript types). Use when writing East programs that need optimization (MADS, Optuna, SimAnneal, Scipy), machine learning (XGBoost, LightGBM, NGBoost, Torch MLP, Lightning, GP), ML utilities (Sklearn preprocessing, metrics, splits), or model explainability (SHAP). Triggers for: (1) Writing East programs with @elaraai/east-py-datascience, (2) Derivative-free optimization with MADS, (3) Bayesian optimization with Optuna, (4) Discrete/combinatorial optimization with SimAnneal, (5) Gradient boosting with XGBoost or LightGBM, (6) Probabilistic predictions with NGBoost or GP, (7) Neural networks with Torch MLP or Lightning, (8) Data preprocessing and metrics with Sklearn, (9) Model explainability with Shap.
 ---
 
 # East Data Science
@@ -73,6 +73,23 @@ Task → What do you need?
     │   ├─ Predict → .mlpPredict(), .mlpPredictMulti()
     │   └─ Embeddings → .mlpEncode(), .mlpDecode()
     │
+    ├─ Lightning (PyTorch Lightning neural networks)
+    │   ├─ Train → .train(X, y, config, masks, group_weights, conditions)
+    │   ├─ Predict → .predict(model, X, masks, conditions)
+    │   ├─ Embeddings → .encode(), .decode(), .decodeConditional() (autoencoder only)
+    │   ├─ Architectures:
+    │   │   ├─ mlp: simple feedforward
+    │   │   ├─ autoencoder: encoder → latent → decoder
+    │   │   ├─ conv1d: 1D convolutional autoencoder (temporal)
+    │   │   ├─ sequential: LSTM/GRU autoencoder (temporal)
+    │   │   └─ transformer: attention-based autoencoder (temporal)
+    │   ├─ Output modes:
+    │   │   ├─ regression: MSE loss
+    │   │   ├─ binary: BCE loss, per-position pos_weights (VectorType), masks
+    │   │   └─ multi_head: N independent CE heads, per-head class_weights, masks
+    │   ├─ Conditional generation: condition_dim in temporal architectures
+    │   └─ Features: early stopping, gradient clipping, epoch callbacks, group_weights
+    │
     ├─ GP (Gaussian Process regression)
     │   ├─ Train → .train()
     │   └─ Predict → .predict(), .predictStd()
@@ -84,8 +101,9 @@ Task → What do you need?
     │   └─ Multi-target → .regressorChainTrain(), .regressorChainPredict()
     │
     └─ Shap (model explainability)
-        ├─ Create → .treeExplainerCreate(), .kernelExplainerCreate()
-        └─ Compute → .computeValues(), .featureImportance()
+        ├─ Create → .treeExplainerCreate() (XGBoost only), .kernelExplainerCreate() (any model)
+        ├─ Compute → .computeValues(), .featureImportance()
+        └─ Supports → TreeExplainer: XGBoost; KernelExplainer: XGBoost, LightGBM, NGBoost, GP, Torch, RegressorChain
 ```
 
 ## Common Types
@@ -114,6 +132,7 @@ Task → What do you need?
 | LightGBM | `import { LightGBM } from "@elaraai/east-py-datascience"` | Fast gradient boosting |
 | NGBoost | `import { NGBoost } from "@elaraai/east-py-datascience"` | Probabilistic gradient boosting |
 | Torch | `import { Torch } from "@elaraai/east-py-datascience"` | Neural networks (MLP) |
+| Lightning | `import { Lightning } from "@elaraai/east-py-datascience"` | PyTorch Lightning neural networks |
 | GP | `import { GP } from "@elaraai/east-py-datascience"` | Gaussian Process regression |
 | Sklearn | `import { Sklearn } from "@elaraai/east-py-datascience"` | Preprocessing, metrics, data splitting |
 | Shap | `import { Shap } from "@elaraai/east-py-datascience"` | Model explainability (SHAP values) |

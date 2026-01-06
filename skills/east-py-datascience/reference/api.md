@@ -15,6 +15,7 @@ Complete function signatures, types, and arguments for all data science platform
 - [LightGBM (Fast Gradient Boosting)](#lightgbm-fast-gradient-boosting)
 - [NGBoost (Probabilistic Gradient Boosting)](#ngboost-probabilistic-gradient-boosting)
 - [Torch (Neural Networks)](#torch-neural-networks)
+- [Lightning (PyTorch Lightning)](#lightning-pytorch-lightning)
 - [GP (Gaussian Process)](#gp-gaussian-process)
 - [Shap (Model Explainability)](#shap-model-explainability)
 
@@ -380,9 +381,9 @@ import { Torch } from "@elaraai/east-py-datascience";
 |------|-------------|
 | `Torch.Types.TorchActivationType` | `VariantType({ relu, tanh, sigmoid, leaky_relu })` |
 | `Torch.Types.TorchOutputActivationType` | `VariantType({ none, softmax, sigmoid })` |
-| `Torch.Types.TorchLossType` | `VariantType({ mse, mae, cross_entropy, kl_div })` |
+| `Torch.Types.TorchLossType` | `VariantType({ mse, mae, cross_entropy, kl_div, bce, bce_with_logits })` |
 | `Torch.Types.TorchOptimizerType` | `VariantType({ adam, sgd, adamw, rmsprop })` |
-| `Torch.Types.TorchMLPConfigType` | `StructType({ hidden_layers: ArrayType<Integer>, activation: OptionType<TorchActivationType>, dropout: OptionType<Float>, output_dim: OptionType<Integer> })` |
+| `Torch.Types.TorchMLPConfigType` | `StructType({ hidden_layers: ArrayType<Integer>, activation: OptionType<TorchActivationType>, output_activation: OptionType<TorchOutputActivationType>, dropout: OptionType<Float>, output_dim: OptionType<Integer> })` |
 | `Torch.Types.TorchTrainConfigType` | `StructType({ epochs: OptionType<Integer>, batch_size: OptionType<Integer>, learning_rate: OptionType<Float>, loss: OptionType<TorchLossType>, optimizer: OptionType<TorchOptimizerType>, early_stopping: OptionType<Integer>, validation_split: OptionType<Float>, random_state: OptionType<Integer> })` |
 | `Torch.Types.TorchTrainResultType` | `StructType({ train_losses: VectorType, val_losses: VectorType, best_epoch: Integer })` |
 | `Torch.Types.TorchTrainOutputType` | `StructType({ model: ModelBlobType, result: TorchTrainResultType })` |
@@ -410,6 +411,92 @@ import { Torch } from "@elaraai/east-py-datascience";
 | `early_stopping` | `OptionType<Integer>` | Patience, 0=disabled |
 | `validation_split` | `OptionType<Float>` | Validation fraction (default 0.2) |
 | `random_state` | `OptionType<Integer>` | Random seed |
+
+---
+
+## Lightning (PyTorch Lightning)
+
+Lightning provides production-grade neural network training using PyTorch Lightning with early stopping, gradient clipping, multiple architectures (including temporal), and conditional generation.
+
+**Import:**
+```typescript
+import { Lightning } from "@elaraai/east-py-datascience";
+```
+
+**Functions:**
+| Signature | Description |
+|-----------|-------------|
+| `Lightning.train(X: MatrixType, y: MatrixType, config: ConfigType, masks: OptionType<Tensor3DBoolType>, group_weights: OptionType<GroupWeightsType>, conditions: OptionType<MatrixType>): ResultType` | Train a Lightning model |
+| `Lightning.predict(model: ModelBlobType, X: MatrixType, masks: OptionType<Tensor3DBoolType>, conditions: OptionType<MatrixType>): MatrixType` | Predict using trained model |
+| `Lightning.encode(model: ModelBlobType, X: MatrixType): MatrixType` | Encode to latent space (autoencoder architectures only) |
+| `Lightning.decode(model: ModelBlobType, z: MatrixType): MatrixType` | Decode from latent space (non-conditional autoencoders) |
+| `Lightning.decodeConditional(model: ModelBlobType, z: MatrixType, conditions: MatrixType): MatrixType` | Decode with condition vectors (conditional autoencoders) |
+| `Lightning.generateSequence(model: ModelBlobType, prefix: MatrixType, condition: OptionType<MatrixType>, config: GenerateConfigType): MatrixType` | Generate sequence autoregressively from sequential model |
+
+**Types:**
+
+| Type | Description |
+|------|-------------|
+| `Lightning.Types.OutputType` | `VariantType({ regression: Null, binary: { pos_weight: OptionType<Vector> }, multiclass: { n_classes: Integer, class_weights: OptionType<Vector> }, multi_head: { n_heads: Integer, n_classes_per_head: Integer, class_weights: OptionType<Matrix> } })` |
+| `Lightning.Types.CellType` | `VariantType({ lstm: Null, gru: Null })` - RNN cell type for sequential architecture |
+| `Lightning.Types.GenerateConfigType` | `StructType({ n_steps: Integer, temperature: Float, return_probs: Boolean })` - Config for sequence generation |
+| `Lightning.Types.ArchitectureType` | See Architecture Types below |
+| `Lightning.Types.EpochCallbackType` | `FunctionType([Integer, Float, Float], Null)` - Callback: (epoch, train_loss, val_loss) -> void |
+| `Lightning.Types.ConfigType` | `StructType({ architecture: ArchitectureType, output: OutputType, learning_rate: OptionType<Float>, max_epochs: OptionType<Integer>, patience: OptionType<Integer>, batch_size: OptionType<Integer>, dropout: OptionType<Float>, gradient_clip: OptionType<Float>, weight_decay: OptionType<Float>, random_state: OptionType<Integer>, epoch_callback: OptionType<EpochCallbackType> })` |
+| `Lightning.Types.ResultType` | `StructType({ model: ModelBlobType, train_loss: Float, val_loss: Float, best_epoch: Integer })` |
+| `Lightning.Types.ModelBlobType` | `VariantType({ lightning: { data: Blob, n_features: Integer, output_dim: Integer, architecture_type: String, output_type: String, latent_dim: OptionType<Integer> } })` |
+| `Lightning.Types.Tensor3DBoolType` | `ArrayType(ArrayType(ArrayType(Boolean)))` - 3D boolean masks (n_samples, n_heads, n_classes) |
+| `Lightning.Types.GroupWeightsType` | `StructType({ weights: VariantType({ binary: Array<Array<Float>>, multi_head: Array<Array<Array<Float>>> }), sample_groups: Array<Integer> })` |
+
+**Architecture Types:**
+
+| Variant | Fields | Description |
+|---------|--------|-------------|
+| `mlp` | `{ hidden_layers: Array<Integer> }` | Simple feedforward MLP |
+| `autoencoder` | `{ encoder_layers: Array<Integer>, latent_dim: Integer, decoder_layers: Array<Integer> }` | Autoencoder with bottleneck |
+| `conv1d` | `{ n_channels: Integer, sequence_length: Integer, conv_channels: Array<Integer>, kernel_size: Integer, latent_dim: Integer, condition_dim: OptionType<Integer> }` | 1D convolutional autoencoder for temporal patterns |
+| `sequential` | `{ n_channels: Integer, sequence_length: Integer, hidden_size: Integer, n_layers: Integer, cell_type: CellType, latent_dim: Integer, bidirectional: Boolean, condition_dim: OptionType<Integer> }` | LSTM/GRU autoencoder for long-range dependencies |
+| `transformer` | `{ n_channels: Integer, sequence_length: Integer, d_model: Integer, n_attention_heads: Integer, n_layers: Integer, d_ff: OptionType<Integer>, latent_dim: Integer, condition_dim: OptionType<Integer> }` | Attention-based autoencoder |
+
+**Config Options:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `architecture` | `ArchitectureType` | Model architecture |
+| `output` | `OutputType` | Output mode (regression, binary, multiclass, multi_head) |
+| `learning_rate` | `OptionType<Float>` | Learning rate (default 1e-3) |
+| `max_epochs` | `OptionType<Integer>` | Maximum training epochs (default 100) |
+| `patience` | `OptionType<Integer>` | Early stopping patience (default 10) |
+| `batch_size` | `OptionType<Integer>` | Batch size (default 32) |
+| `dropout` | `OptionType<Float>` | Dropout rate (default 0.1) |
+| `gradient_clip` | `OptionType<Float>` | Gradient clipping value (default 1.0) |
+| `weight_decay` | `OptionType<Float>` | L2 regularization (default 0) |
+| `random_state` | `OptionType<Integer>` | Random seed for reproducibility |
+| `epoch_callback` | `OptionType<EpochCallbackType>` | Optional callback called each epoch |
+
+**Output Modes:**
+
+| Mode | Loss Function | Use Case |
+|------|---------------|----------|
+| `regression` | MSE | Continuous targets |
+| `binary` | BCE with per-position pos_weights, masks | Binary classification with optional masking |
+| `multiclass` | CrossEntropy with optional class_weights | Single-label multi-class |
+| `multi_head` | N independent CrossEntropy heads, masks | Multi-label with mutex per head, optional masking |
+
+**Masks:**
+- Binary: Shape `(n_samples, 1, output_dim)` - masked positions excluded from loss and set to 0 in predictions
+- Multi-head: Shape `(n_samples, n_heads, n_classes)` - masked classes get -inf logits (0 probability after softmax)
+
+**Group Weights:**
+- Per-sample class weighting via discrete groups (e.g., by grade/category)
+- `sample_groups`: Maps each sample to a group index
+- `weights.binary`: `[n_groups][output_dim]` pos_weights per group
+- `weights.multi_head`: `[n_groups][n_heads][n_classes]` class_weights per group
+
+**Conditional Generation:**
+- Temporal architectures (conv1d, sequential, transformer) support `condition_dim`
+- Pass `conditions` matrix `(n_samples, condition_dim)` to train, predict, and decodeConditional
+- Use case: Stage 1 embeddings as conditioning input for Stage 2 models
 
 ---
 
@@ -476,15 +563,17 @@ import { Shap } from "@elaraai/east-py-datascience";
 | `Shap.Types.ShapBaseValueType` | `VariantType({ single: Float, per_class: VectorType })` |
 | `Shap.Types.ShapResultType` | `StructType({ shap_values: ShapValuesType, base_value: ShapBaseValueType, feature_names: ArrayType<String> })` |
 | `Shap.Types.FeatureImportanceType` | `StructType({ feature_names: ArrayType<String>, importances: VectorType, std: OptionType<VectorType> })` |
-| `Shap.Types.TreeModelBlobType` | XGBoost or LightGBM models |
-| `Shap.Types.AnyModelBlobType` | Any supported model (XGBoost, LightGBM, NGBoost, GP, Torch, RegressorChain) |
+| `Shap.Types.TreeModelBlobType` | XGBoost models only (regressor/classifier/quantile). Note: LightGBM is not supported for TreeExplainer due to SHAP compatibility issues - use KernelExplainer instead. |
+| `Shap.Types.AnyModelBlobType` | Any supported model (XGBoost, LightGBM, NGBoost, GP, Torch MLP, RegressorChain) |
 
 **Supported Models:**
 
 | Explainer | Supported Models |
 |-----------|------------------|
-| `treeExplainerCreate` | XGBoost regressor/classifier/quantile, LightGBM regressor/classifier |
-| `kernelExplainerCreate` | All tree models + NGBoost, GP, Torch MLP, RegressorChain |
+| `treeExplainerCreate` | `xgboost_regressor`, `xgboost_classifier`, `xgboost_quantile` (XGBoost only) |
+| `kernelExplainerCreate` | All models: XGBoost, LightGBM, `ngboost_regressor`, `gp_regressor`, `torch_mlp`, `regressor_chain` |
+
+Note: LightGBM models are not supported for TreeExplainer due to SHAP compatibility issues. Use KernelExplainer for LightGBM models.
 
 ---
 
