@@ -101,7 +101,7 @@ jobs:
       - name: Build and push east-node
         uses: docker/build-push-action@v5
         with:
-          context: ./docker
+          context: .
           file: ./docker/Dockerfile.east-node
           push: ${{ github.event_name != 'pull_request' && (github.event.inputs.push != 'false') }}
           tags: ${{ steps.meta.outputs.tags }}
@@ -220,7 +220,7 @@ jobs:
       - name: Build and push e3
         uses: docker/build-push-action@v5
         with:
-          context: ./docker
+          context: .
           file: ./docker/Dockerfile.e3
           push: ${{ github.event_name != 'pull_request' && (github.event.inputs.push != 'false') }}
           tags: ${{ steps.meta.outputs.tags }}

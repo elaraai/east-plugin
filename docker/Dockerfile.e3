@@ -27,6 +27,19 @@ ARG E3_CLI_VERSION
 ARG E3_API_CLIENT_VERSION
 ARG E3_API_SERVER_VERSION
 
+# Pass build args as environment variables for install script
+ENV EAST_VERSION=${EAST_VERSION:-latest}
+ENV EAST_NODE_STD_VERSION=${EAST_NODE_STD_VERSION:-latest}
+ENV EAST_NODE_IO_VERSION=${EAST_NODE_IO_VERSION:-latest}
+ENV EAST_NODE_CLI_VERSION=${EAST_NODE_CLI_VERSION:-latest}
+ENV EAST_UI_VERSION=${EAST_UI_VERSION:-latest}
+ENV E3_VERSION=${E3_VERSION:-latest}
+ENV E3_TYPES_VERSION=${E3_TYPES_VERSION:-latest}
+ENV E3_CORE_VERSION=${E3_CORE_VERSION:-latest}
+ENV E3_CLI_VERSION=${E3_CLI_VERSION:-latest}
+ENV E3_API_CLIENT_VERSION=${E3_API_CLIENT_VERSION:-latest}
+ENV E3_API_SERVER_VERSION=${E3_API_SERVER_VERSION:-latest}
+
 # Install system dependencies including Python
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -48,41 +61,11 @@ ENV PATH="/opt/venv/bin:$PATH"
 # Set working directory
 WORKDIR /workspace
 
-# Install Node.js packages (AGPL) with explicit versions
-RUN npm install -g \
-    typescript \
-    @types/node \
-    @elaraai/east@${EAST_VERSION:-latest} \
-    @elaraai/east-node-std@${EAST_NODE_STD_VERSION:-latest} \
-    @elaraai/east-node-io@${EAST_NODE_IO_VERSION:-latest} \
-    @elaraai/east-node-cli@${EAST_NODE_CLI_VERSION:-latest} \
-    @elaraai/east-ui@${EAST_UI_VERSION:-latest}
-
-# Install Node.js packages (BSL + AGPL - e3) with explicit versions
-RUN npm install -g \
-    @elaraai/e3@${E3_VERSION:-latest} \
-    @elaraai/e3-types@${E3_TYPES_VERSION:-latest} \
-    @elaraai/e3-core@${E3_CORE_VERSION:-latest} \
-    @elaraai/e3-cli@${E3_CLI_VERSION:-latest} \
-    @elaraai/e3-api-client@${E3_API_CLIENT_VERSION:-latest} \
-    @elaraai/e3-api-server@${E3_API_SERVER_VERSION:-latest}
-
-# Install Python packages (BSL) from GitHub into venv
-# Note: east-py-datascience[all] includes torch, xgboost, lightgbm, sklearn, scipy, etc.
-# Pin numba/llvmlite to Python 3.11 compatible versions before installing shap
-RUN uv pip install \
-    "numba>=0.58.0" \
-    "llvmlite>=0.41.0" \
-    "east-py @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py" \
-    "east-py-std @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-std" \
-    "east-py-io @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-io" \
-    "east-py-datascience[all] @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-datascience" \
-    "east-py-cli @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-cli"
-
-# Verify installations
-RUN npx @elaraai/east-node-cli --version || echo "east-node-cli installed"
-RUN e3 --version || echo "e3-cli installed"
-RUN python3 -c "import east; print('east-py installed')"
+# Copy and run install script (Node.js + Python)
+COPY scripts/install-packages.sh /tmp/install-packages.sh
+RUN chmod +x /tmp/install-packages.sh && \
+    /tmp/install-packages.sh && \
+    rm /tmp/install-packages.sh
 
 # Create compile environment for single-file type-checking
 RUN mkdir -p /compile && \

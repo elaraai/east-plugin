@@ -47,6 +47,42 @@ A Claude Code plugin for the East programming language ecosystem.
 /plugin install east
 ```
 
+## Local Installation
+
+Install the East CLIs directly on your machine (Linux/macOS):
+
+**For users** (installs CLIs from npm/PyPI):
+```bash
+curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/install.sh | bash
+```
+
+**For contributors** (clones all repos and builds from source):
+```bash
+curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/install-dev.sh | bash
+```
+
+| Script | What it does | Requirements |
+|--------|--------------|--------------|
+| `install.sh` | Installs CLIs globally from npm/PyPI | `curl`, `git` |
+| `install-dev.sh` | Clones all repos to `~/east`, builds and tests them | `curl`, `git`, `make` |
+| `update.sh` | Updates CLIs to latest versions | `npm` |
+| `update-dev.sh` | Pulls latest and rebuilds all repos | `git`, `make` |
+
+**Update CLIs** (fetches latest versions from npm/PyPI):
+```bash
+curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/update.sh | bash
+```
+
+**Update repos** (pulls latest commits and rebuilds from source):
+```bash
+curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/update-dev.sh | bash
+```
+
+Both install scripts install:
+- `east-node` - East Node.js CLI
+- `e3` - East Execution Engine CLI
+- `east-py` - East Python CLI
+
 ## Docker Images
 
 Pre-built Docker images provide a consistent execution environment without needing to install Node.js, Python, or any East packages locally.
@@ -80,13 +116,11 @@ docker run -it --rm -v $(pwd):/workspace ghcr.io/elaraai/e3 bash
 ### Building Locally
 
 ```bash
-cd docker
+# Build east-node image (from repo root)
+docker build -f docker/Dockerfile.east-node -t ghcr.io/elaraai/east-node .
 
-# Build east-node image
-docker build -f Dockerfile.east-node -t ghcr.io/elaraai/east-node .
-
-# Build e3 image
-docker build -f Dockerfile.e3 -t ghcr.io/elaraai/e3 .
+# Build e3 image (from repo root)
+docker build -f docker/Dockerfile.e3 -t ghcr.io/elaraai/e3 .
 ```
 
 ### Firecracker Compatibility

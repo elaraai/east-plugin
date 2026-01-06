@@ -15,7 +15,7 @@ jobs:
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          repositories: east,east-node,east-py,east-ui,e3
+          repositories: east,east-node,east-py,east-ui,e3,east-plugin
 
       - name: Checkout east-plugin
         uses: actions/checkout@v4
