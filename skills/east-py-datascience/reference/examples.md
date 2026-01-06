@@ -16,6 +16,7 @@ Working code examples for common data science use cases.
 - [LightGBM (Fast Gradient Boosting)](#lightgbm-fast-gradient-boosting)
 - [NGBoost (Probabilistic Gradient Boosting)](#ngboost-probabilistic-gradient-boosting)
 - [Torch (Neural Networks)](#torch-neural-networks)
+- [Lightning (PyTorch Lightning)](#lightning-pytorch-lightning)
 - [GP (Gaussian Process)](#gp-gaussian-process)
 - [Shap (Model Explainability)](#shap-model-explainability)
 
@@ -741,6 +742,383 @@ const blendOrigins = East.function([Torch.Types.ModelBlobType], Torch.Types.Matr
 
 ---
 
+## Lightning (PyTorch Lightning)
+
+### Regression
+
+```typescript
+import { East, variant } from "@elaraai/east";
+import { Lightning } from "@elaraai/east-py-datascience";
+
+const train = East.function([], Lightning.Types.ResultType, $ => {
+    const X = $.let([
+        [1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [4.0, 4.0],
+        [5.0, 5.0], [6.0, 6.0], [7.0, 7.0], [8.0, 8.0],
+    ]);
+    const y = $.let([
+        [2.0], [4.0], [6.0], [8.0], [10.0], [12.0], [14.0], [16.0],
+    ]);
+
+    const config = $.let({
+        architecture: variant('mlp', { hidden_layers: [16n, 8n] }),
+        output: variant('regression', null),
+        learning_rate: variant('some', 0.01),
+        max_epochs: variant('some', 100n),
+        patience: variant('some', 10n),
+        batch_size: variant('some', 4n),
+        dropout: variant('some', 0.1),
+        gradient_clip: variant('some', 1.0),
+        weight_decay: variant('none', null),
+        random_state: variant('some', 42n),
+        epoch_callback: variant('none', null),
+    });
+
+    return $.return(Lightning.train(
+        X, y, config,
+        variant('none', null),  // masks
+        variant('none', null),  // group_weights
+        variant('none', null)   // conditions
+    ));
+});
+```
+
+### Binary Classification
+
+```typescript
+import { East, variant } from "@elaraai/east";
+import { Lightning } from "@elaraai/east-py-datascience";
+
+const train = East.function([], Lightning.Types.ResultType, $ => {
+    const X = $.let([
+        [0.0, 0.0], [0.5, 0.5], [1.0, 1.0], [1.5, 1.5],
+        [10.0, 10.0], [10.5, 10.5], [11.0, 11.0], [11.5, 11.5],
+    ]);
+    const y = $.let([
+        [0.0], [0.0], [0.0], [0.0], [1.0], [1.0], [1.0], [1.0],
+    ]);
+
+    const config = $.let({
+        architecture: variant('mlp', { hidden_layers: [16n] }),
+        output: variant('binary', { pos_weight: variant('some', [1.0]) }),
+        learning_rate: variant('some', 0.01),
+        max_epochs: variant('some', 100n),
+        patience: variant('some', 20n),
+        batch_size: variant('some', 4n),
+        dropout: variant('some', 0.0),
+        gradient_clip: variant('some', 1.0),
+        weight_decay: variant('none', null),
+        random_state: variant('some', 42n),
+        epoch_callback: variant('none', null),
+    });
+
+    return $.return(Lightning.train(
+        X, y, config,
+        variant('none', null),
+        variant('none', null),
+        variant('none', null)
+    ));
+});
+```
+
+### Multi-Head Classification
+
+```typescript
+import { East, variant } from "@elaraai/east";
+import { Lightning } from "@elaraai/east-py-datascience";
+
+// Multi-head: 2 heads × 3 classes each (e.g., additives with 84 time slots × 4 bins)
+const train = East.function([], Lightning.Types.ResultType, $ => {
+    const X = $.let([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0], [0.0, 0.0]]);
+    // Targets: (n_samples, n_heads * n_classes) = (4, 6)
+    const y = $.let([
+        [1.0, 0.0, 0.0,  0.0, 1.0, 0.0],  // head0=class0, head1=class1
+        [0.0, 1.0, 0.0,  0.0, 0.0, 1.0],  // head0=class1, head1=class2
+        [0.0, 0.0, 1.0,  1.0, 0.0, 0.0],  // head0=class2, head1=class0
+        [1.0, 0.0, 0.0,  0.0, 1.0, 0.0],  // head0=class0, head1=class1
+    ]);
+
+    const config = $.let({
+        architecture: variant('mlp', { hidden_layers: [32n, 16n] }),
+        output: variant('multi_head', {
+            n_heads: 2n,
+            n_classes_per_head: 3n,
+            class_weights: variant('none', null),
+        }),
+        learning_rate: variant('some', 0.01),
+        max_epochs: variant('some', 100n),
+        patience: variant('some', 20n),
+        batch_size: variant('some', 2n),
+        dropout: variant('some', 0.1),
+        gradient_clip: variant('some', 1.0),
+        weight_decay: variant('none', null),
+        random_state: variant('some', 42n),
+        epoch_callback: variant('none', null),
+    });
+
+    return $.return(Lightning.train(
+        X, y, config,
+        variant('none', null),
+        variant('none', null),
+        variant('none', null)
+    ));
+});
+```
+
+### Autoencoder with Encode/Decode
+
+```typescript
+import { East, variant } from "@elaraai/east";
+import { Lightning } from "@elaraai/east-py-datascience";
+
+const trainAutoencoder = East.function([], Lightning.Types.ResultType, $ => {
+    const X = $.let([
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+        [1.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 1.0],
+    ]);
+
+    const config = $.let({
+        architecture: variant('autoencoder', {
+            encoder_layers: [8n],
+            latent_dim: 2n,
+            decoder_layers: [8n],
+        }),
+        output: variant('regression', null),
+        learning_rate: variant('some', 0.01),
+        max_epochs: variant('some', 100n),
+        patience: variant('some', 20n),
+        batch_size: variant('some', 4n),
+        dropout: variant('some', 0.0),
+        gradient_clip: variant('some', 1.0),
+        weight_decay: variant('none', null),
+        random_state: variant('some', 42n),
+        epoch_callback: variant('none', null),
+    });
+
+    // Train autoencoder (X -> X reconstruction)
+    return $.return(Lightning.train(
+        X, X, config,
+        variant('none', null),
+        variant('none', null),
+        variant('none', null)
+    ));
+});
+
+// Extract and blend embeddings
+const blendEmbeddings = East.function(
+    [Lightning.Types.ModelBlobType],
+    Lightning.Types.MatrixType,
+    ($, model) => {
+        const X_origins = $.let([
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+        ]);
+
+        // Encode to latent space
+        const embeddings = $.let(Lightning.encode(model, X_origins));
+
+        // Blend: 50/50 average of two embeddings
+        const emb_A = $.let(embeddings.get(0n));
+        const emb_B = $.let(embeddings.get(1n));
+        const blend = $.let([
+            emb_A.get(0n).multiply(0.5).add(emb_B.get(0n).multiply(0.5)),
+            emb_A.get(1n).multiply(0.5).add(emb_B.get(1n).multiply(0.5)),
+        ]);
+
+        // Decode blended embedding
+        const blend_matrix = $.let([blend]);
+        const reconstructed = $.let(Lightning.decode(model, blend_matrix));
+
+        return $.return(reconstructed);
+    }
+);
+```
+
+### Conv1D Temporal Autoencoder with Conditional Generation
+
+```typescript
+import { East, variant } from "@elaraai/east";
+import { Lightning } from "@elaraai/east-py-datascience";
+
+// Temporal autoencoder: 2 channels × 3 time steps × 2 classes = 12 features
+const trainConditional = East.function([], Lightning.Types.ResultType, $ => {
+    const X = $.let([
+        [1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0],
+        [1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0],
+    ]);
+
+    // Condition: 3-dim feature vector per sample (e.g., Stage 1 embeddings)
+    const conditions = $.let([
+        [1.0, 0.0, 0.5],
+        [0.0, 1.0, 0.8],
+        [1.0, 0.0, 0.5],
+        [0.5, 0.5, 0.3],
+    ]);
+
+    const config = $.let({
+        architecture: variant('conv1d', {
+            n_channels: 2n,
+            sequence_length: 3n,
+            conv_channels: [8n],
+            kernel_size: 3n,
+            latent_dim: 4n,
+            condition_dim: variant('some', 3n),
+        }),
+        output: variant('multi_head', {
+            n_heads: 6n,  // n_channels * sequence_length
+            n_classes_per_head: 2n,
+            class_weights: variant('none', null),
+        }),
+        learning_rate: variant('some', 0.01),
+        max_epochs: variant('some', 100n),
+        patience: variant('some', 20n),
+        batch_size: variant('some', 2n),
+        dropout: variant('some', 0.0),
+        gradient_clip: variant('some', 1.0),
+        weight_decay: variant('none', null),
+        random_state: variant('some', 42n),
+        epoch_callback: variant('none', null),
+    });
+
+    // Train with conditions
+    return $.return(Lightning.train(
+        X, X, config,
+        variant('none', null),           // masks
+        variant('none', null),           // group_weights
+        variant('some', conditions)      // conditions
+    ));
+});
+
+// Predict with conditions and decode conditionally
+const predictConditional = East.function(
+    [Lightning.Types.ModelBlobType],
+    Lightning.Types.MatrixType,
+    ($, model) => {
+        const X = $.let([
+            [1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0],
+            [0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0],
+        ]);
+        const conditions = $.let([[1.0, 0.0, 0.5], [0.0, 1.0, 0.8]]);
+
+        // Predict with conditions
+        const predictions = $.let(Lightning.predict(
+            model, X,
+            variant('none', null),       // masks
+            variant('some', conditions)  // conditions
+        ));
+
+        // Or: encode → decodeConditional
+        const z = $.let(Lightning.encode(model, X));
+        const decoded = $.let(Lightning.decodeConditional(model, z, conditions));
+
+        return $.return(decoded);
+    }
+);
+```
+
+### Sequential (LSTM) Autoencoder
+
+```typescript
+import { East, variant } from "@elaraai/east";
+import { Lightning } from "@elaraai/east-py-datascience";
+
+const trainLSTM = East.function([], Lightning.Types.ResultType, $ => {
+    const X = $.let([
+        [1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0],
+    ]);
+
+    const config = $.let({
+        architecture: variant('sequential', {
+            n_channels: 2n,
+            sequence_length: 3n,
+            hidden_size: 16n,
+            n_layers: 1n,
+            cell_type: variant('lstm', null),  // or 'gru'
+            latent_dim: 4n,
+            bidirectional: true,
+            condition_dim: variant('none', null),
+        }),
+        output: variant('multi_head', {
+            n_heads: 6n,
+            n_classes_per_head: 2n,
+            class_weights: variant('none', null),
+        }),
+        learning_rate: variant('some', 0.01),
+        max_epochs: variant('some', 100n),
+        patience: variant('some', 20n),
+        batch_size: variant('some', 2n),
+        dropout: variant('some', 0.0),
+        gradient_clip: variant('some', 1.0),
+        weight_decay: variant('none', null),
+        random_state: variant('some', 42n),
+        epoch_callback: variant('none', null),
+    });
+
+    return $.return(Lightning.train(
+        X, X, config,
+        variant('none', null),
+        variant('none', null),
+        variant('none', null)
+    ));
+});
+```
+
+### Epoch Callback for Progress Logging
+
+```typescript
+import { East, FloatType, IntegerType, NullType, variant } from "@elaraai/east";
+import { Lightning } from "@elaraai/east-py-datascience";
+import { Console } from "@elaraai/east-node-std";
+
+const trainWithCallback = East.function([], Lightning.Types.ResultType, $ => {
+    const X = $.let([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [4.0, 4.0]]);
+    const y = $.let([[2.0], [4.0], [6.0], [8.0]]);
+
+    // Define epoch callback
+    const callback = East.function(
+        [IntegerType, FloatType, FloatType],
+        NullType,
+        ($, epoch, train_loss, val_loss) => {
+            $(Console.log(
+                East.value("Epoch ").concat(epoch.toString())
+                    .concat(" - train: ").concat(train_loss.toString())
+                    .concat(" val: ").concat(val_loss.toString())
+            ));
+            return $.return(null);
+        }
+    );
+
+    const config = $.let({
+        architecture: variant('mlp', { hidden_layers: [8n] }),
+        output: variant('regression', null),
+        learning_rate: variant('some', 0.01),
+        max_epochs: variant('some', 50n),
+        patience: variant('some', 10n),
+        batch_size: variant('some', 2n),
+        dropout: variant('none', null),
+        gradient_clip: variant('none', null),
+        weight_decay: variant('none', null),
+        random_state: variant('some', 42n),
+        epoch_callback: variant('some', callback),
+    });
+
+    return $.return(Lightning.train(
+        X, y, config,
+        variant('none', null),
+        variant('none', null),
+        variant('none', null)
+    ));
+});
+```
+
+---
+
 ## GP (Gaussian Process)
 
 ### GP with Uncertainty
@@ -786,6 +1164,27 @@ const explain = East.function(
     [XGBoost.Types.ModelBlobType, Shap.Types.MatrixType],
     Shap.Types.FeatureImportanceType,
     ($, model, X) => {
+        const explainer = $.let(Shap.treeExplainerCreate(model));
+        const feature_names = $.let(["feature1", "feature2"]);
+        const shap_result = $.let(Shap.computeValues(explainer, X, feature_names));
+        const importance = $.let(Shap.featureImportance(shap_result.shap_values, feature_names));
+        return $.return(importance);
+    }
+);
+```
+
+### TreeExplainer with XGBoost Quantile
+
+```typescript
+import { East, variant } from "@elaraai/east";
+import { Shap, XGBoost } from "@elaraai/east-py-datascience";
+
+// Train quantile model and explain with SHAP (uses median quantile for explanations)
+const explainQuantile = East.function(
+    [XGBoost.Types.ModelBlobType, Shap.Types.MatrixType],
+    Shap.Types.FeatureImportanceType,
+    ($, model, X) => {
+        // TreeExplainer works with xgboost_quantile models
         const explainer = $.let(Shap.treeExplainerCreate(model));
         const feature_names = $.let(["feature1", "feature2"]);
         const shap_result = $.let(Shap.computeValues(explainer, X, feature_names));
