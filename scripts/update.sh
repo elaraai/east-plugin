@@ -42,9 +42,6 @@ log_info "Updating Node.js packages..."
 log_info "Updating @elaraai/east-node-cli..."
 npm update -g @elaraai/east-node-cli && log_success "east-node-cli updated" || log_warn "Failed to update east-node-cli"
 
-log_info "Updating @elaraai/e3..."
-npm update -g @elaraai/e3 && log_success "e3 updated" || log_warn "Failed to update e3"
-
 log_info "Updating @elaraai/e3-cli..."
 npm update -g @elaraai/e3-cli && log_success "e3-cli updated" || log_warn "Failed to update e3-cli"
 

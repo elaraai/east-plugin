@@ -1,11 +1,23 @@
 #!/usr/bin/env bash
 # East CLI Installation Script
 # Usage: curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/install.sh | bash
+#        curl -fsSL ... | bash -s -- -y   # Non-interactive mode
+#
+# Options:
+#   -y, --yes    Assume yes to all prompts (non-interactive mode)
 #
 # This script installs the East CLIs for local use without cloning source repositories.
 # For development/contributing, use install-dev.sh instead.
 
 set -e
+
+# Parse arguments
+AUTO_YES=false
+for arg in "$@"; do
+    case $arg in
+        -y|--yes) AUTO_YES=true ;;
+    esac
+done
 
 # Colors for output
 RED='\033[0;31m'
@@ -19,6 +31,16 @@ log_success() { echo -e "${GREEN}[OK]${NC} $1"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
+# Prompt helper - returns 0 (true) if user confirms or AUTO_YES is set
+confirm() {
+    if [ "$AUTO_YES" = true ]; then
+        return 0
+    fi
+    read -p "$1 [y/N] " -n 1 -r
+    echo
+    [[ $REPLY =~ ^[Yy]$ ]]
+}
+
 NODE_VERSION="22"
 
 echo ""
@@ -30,19 +52,14 @@ echo "This will install:"
 echo "  - nvm (Node Version Manager)"
 echo "  - Node.js $NODE_VERSION"
 echo "  - @elaraai/east-node-cli (East Node.js CLI)"
-echo "  - @elaraai/e3 (East Execution Engine CLI)"
+echo "  - @elaraai/e3-cli (East Execution Engine CLI)"
 echo "  - uv (Python package manager)"
 echo "  - east-py (East Python CLI)"
 echo ""
 
-# Check if running interactively
-if [ -t 0 ]; then
-    read -p "Continue? [y/N] " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo "Aborted."
-        exit 0
-    fi
+if ! confirm "Continue?"; then
+    echo "Aborted."
+    exit 0
 fi
 
 # Install nvm if not present
@@ -104,9 +121,9 @@ install_node_clis() {
     npm install -g @elaraai/east-node-cli
     log_success "east-node CLI installed"
 
-    log_info "Installing @elaraai/e3..."
-    npm install -g @elaraai/e3
-    log_success "e3 CLI installed"
+    log_info "Installing @elaraai/e3-cli..."
+    npm install -g @elaraai/e3-cli
+    log_success "e3-cli installed"
 }
 
 # Install Python CLI
@@ -118,9 +135,8 @@ install_python_cli() {
 
     log_info "Installing east-py CLI..."
 
-    # Use uv tool to install east-py globally
-    # This creates an isolated environment for the CLI
-    uv tool install east-py --from git+https://github.com/elaraai/east-py.git
+    # Install east-py-cli from the monorepo subdirectory
+    uv tool install east-py-cli --from "git+https://github.com/elaraai/east-py.git#subdirectory=packages/east-py-cli"
 
     log_success "east-py CLI installed"
 }
@@ -209,19 +225,75 @@ print_docker_alternative() {
     echo ""
 }
 
-# Main installation
-main() {
-    # Check for curl
+# Check and install required dependencies
+check_dependencies() {
+    local missing=()
+
     if ! command -v curl &> /dev/null; then
-        log_error "curl is required but not installed"
-        exit 1
+        missing+=("curl")
     fi
 
-    # Check for git
     if ! command -v git &> /dev/null; then
-        log_error "git is required but not installed"
+        missing+=("git")
+    fi
+
+    if [ ${#missing[@]} -eq 0 ]; then
+        log_success "All required dependencies found (curl, git)"
+        return 0
+    fi
+
+    log_warn "Missing dependencies: ${missing[*]}"
+    echo ""
+
+    # Helper to run as root (use sudo if available and not already root)
+    run_as_root() {
+        if [ "$(id -u)" -eq 0 ]; then
+            "$@"
+        elif command -v sudo &> /dev/null; then
+            sudo "$@"
+        else
+            log_error "Need root privileges but sudo not available"
+            exit 1
+        fi
+    }
+
+    # Detect package manager and offer to install
+    if command -v apt-get &> /dev/null; then
+        if confirm "Install missing dependencies using apt-get?"; then
+            log_info "Installing ${missing[*]}..."
+            run_as_root apt-get update -qq && run_as_root apt-get install -y "${missing[@]}" || {
+                log_error "Failed to install dependencies"
+                exit 1
+            }
+            log_success "Dependencies installed"
+        else
+            log_error "Cannot continue without: ${missing[*]}"
+            exit 1
+        fi
+    elif command -v brew &> /dev/null; then
+        if confirm "Install missing dependencies using brew?"; then
+            log_info "Installing ${missing[*]}..."
+            brew install "${missing[@]}" || {
+                log_error "Failed to install dependencies"
+                exit 1
+            }
+            log_success "Dependencies installed"
+        else
+            log_error "Cannot continue without: ${missing[*]}"
+            exit 1
+        fi
+    else
+        log_error "No supported package manager found (apt-get or brew)"
+        echo ""
+        echo "Please install manually: ${missing[*]}"
         exit 1
     fi
+}
+
+# Main installation
+main() {
+    # Check dependencies first
+    check_dependencies
 
     # Install nvm and Node.js
     install_nvm

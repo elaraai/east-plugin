@@ -1,11 +1,23 @@
 #!/usr/bin/env bash
 # East Development Environment Setup
 # Usage: curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/install-dev.sh | bash
+#        curl -fsSL ... | bash -s -- -y   # Non-interactive mode
+#
+# Options:
+#   -y, --yes    Assume yes to all prompts (non-interactive mode)
 #
 # This script sets up a complete local development environment for contributing
 # to the East ecosystem. It clones all repositories and builds them from source.
 
 set -e
+
+# Parse arguments
+AUTO_YES=false
+for arg in "$@"; do
+    case $arg in
+        -y|--yes) AUTO_YES=true ;;
+    esac
+done
 
 # Colors for output
 RED='\033[0;31m'
@@ -18,6 +30,16 @@ log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 log_success() { echo -e "${GREEN}[OK]${NC} $1"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+
+# Prompt helper - returns 0 (true) if user confirms or AUTO_YES is set
+confirm() {
+    if [ "$AUTO_YES" = true ]; then
+        return 0
+    fi
+    read -p "$1 [y/N] " -n 1 -r
+    echo
+    [[ $REPLY =~ ^[Yy]$ ]]
+}
 
 # Configuration
 EAST_DIR="${EAST_DIR:-$HOME/east}"
@@ -35,9 +57,8 @@ echo "  - Install uv (Python package manager) if not present"
 echo "  - Clone all East repositories to $EAST_DIR"
 echo "  - Build and test all repositories"
 echo ""
-read -p "Continue? [y/N] " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+
+if ! confirm "Continue?"; then
     echo "Aborted."
     exit 0
 fi
@@ -132,7 +153,7 @@ test_repo() {
     cd "$EAST_DIR"
 }
 
-# Check required dependencies
+# Check and install required dependencies
 check_dependencies() {
     local missing=()
 
@@ -148,16 +169,57 @@ check_dependencies() {
         missing+=("make")
     fi
 
-    if [ ${#missing[@]} -gt 0 ]; then
-        log_error "Missing required dependencies: ${missing[*]}"
-        echo ""
-        echo "Install them with:"
-        echo "  Ubuntu/Debian: sudo apt-get install ${missing[*]}"
-        echo "  macOS:         brew install ${missing[*]}"
-        exit 1
+    if [ ${#missing[@]} -eq 0 ]; then
+        log_success "All required dependencies found (curl, git, make)"
+        return 0
     fi
 
-    log_success "All required dependencies found (curl, git, make)"
+    log_warn "Missing dependencies: ${missing[*]}"
+    echo ""
+
+    # Helper to run as root (use sudo if available and not already root)
+    run_as_root() {
+        if [ "$(id -u)" -eq 0 ]; then
+            "$@"
+        elif command -v sudo &> /dev/null; then
+            sudo "$@"
+        else
+            log_error "Need root privileges but sudo not available"
+            exit 1
+        fi
+    }
+
+    # Detect package manager and offer to install
+    if command -v apt-get &> /dev/null; then
+        if confirm "Install missing dependencies using apt-get?"; then
+            log_info "Installing ${missing[*]}..."
+            run_as_root apt-get update -qq && run_as_root apt-get install -y "${missing[@]}" || {
+                log_error "Failed to install dependencies"
+                exit 1
+            }
+            log_success "Dependencies installed"
+        else
+            log_error "Cannot continue without: ${missing[*]}"
+            exit 1
+        fi
+    elif command -v brew &> /dev/null; then
+        if confirm "Install missing dependencies using brew?"; then
+            log_info "Installing ${missing[*]}..."
+            brew install "${missing[@]}" || {
+                log_error "Failed to install dependencies"
+                exit 1
+            }
+            log_success "Dependencies installed"
+        else
+            log_error "Cannot continue without: ${missing[*]}"
+            exit 1
+        fi
+    else
+        log_error "No supported package manager found (apt-get or brew)"
+        echo ""
+        echo "Please install manually: ${missing[*]}"
+        exit 1
+    fi
 }
 
 # Main installation

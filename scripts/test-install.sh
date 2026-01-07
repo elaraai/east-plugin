@@ -1,13 +1,27 @@
 #!/usr/bin/env bash
 # Test installation scripts in a fresh Ubuntu container
-# Usage: ./test-install.sh [install|install-dev]
+# Usage: ./test-install.sh [install|install-dev] [-y]
+#
+# Examples:
+#   ./test-install.sh install        # Test install.sh interactively
+#   ./test-install.sh install -y     # Test install.sh non-interactively
+#   ./test-install.sh install-dev    # Test install-dev.sh interactively
+#   ./test-install.sh install-dev -y # Test install-dev.sh non-interactively
 
 set -e
 
 SCRIPT="${1:-install}"
-BRANCH="${2:-main}"
+YES_FLAG=""
+
+# Check for -y flag
+for arg in "$@"; do
+    case $arg in
+        -y|--yes) YES_FLAG="-y" ;;
+    esac
+done
 
 echo "Testing scripts/$SCRIPT.sh in fresh Ubuntu container..."
+[ -n "$YES_FLAG" ] && echo "  (non-interactive mode)"
 echo ""
 
 # For local testing, mount the current directory
@@ -16,16 +30,8 @@ if [ -f "scripts/$SCRIPT.sh" ]; then
     docker run -it --rm \
         -v "$(pwd)/scripts:/scripts:ro" \
         ubuntu:24.04 \
-        bash -c "
-            apt-get update && apt-get install -y curl git
-            bash /scripts/$SCRIPT.sh
-        "
+        bash -c "bash /scripts/$SCRIPT.sh $YES_FLAG"
 else
-    echo "Fetching script from GitHub (branch: $BRANCH)"
-    docker run -it --rm \
-        ubuntu:24.04 \
-        bash -c "
-            apt-get update && apt-get install -y curl git
-            curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/$BRANCH/scripts/$SCRIPT.sh | bash
-        "
+    echo "Local script not found. Run from repo root."
+    exit 1
 fi
