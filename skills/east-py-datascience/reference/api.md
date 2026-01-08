@@ -169,11 +169,11 @@ import { Sklearn } from "@elaraai/east-py-datascience";
 
 | Type | Description |
 |------|-------------|
-| `Sklearn.Types.SplitConfigType` | `StructType({ test_size: OptionType<Float>, random_state: OptionType<Integer>, shuffle: OptionType<Boolean> })` |
-| `Sklearn.Types.SplitResultType` | `StructType({ X_train: MatrixType, X_test: MatrixType, y_train: VectorType, y_test: VectorType })` |
-| `Sklearn.Types.ThreeWaySplitConfigType` | `StructType({ val_size: OptionType<Float>, test_size: OptionType<Float>, random_state: OptionType<Integer>, shuffle: OptionType<Boolean> })` |
-| `Sklearn.Types.ThreeWaySplitResultType` | `StructType({ X_train, X_val, X_test: MatrixType, Y_train, Y_val, Y_test: MatrixType })` |
-| `Sklearn.Types.RegressionMetricType` | `VariantType({ mse, rmse, mae, r2, mape, explained_variance, max_error, median_ae })` |
+| `Sklearn.Types.SplitConfigType` | `StructType({ test_size: OptionType<Float>, random_state: OptionType<Integer>, shuffle: OptionType<Boolean>, stratify: OptionType<LabelVectorType>, min_stratify_samples: OptionType<Integer> })` |
+| `Sklearn.Types.SplitResultType` | `StructType({ X_train: MatrixType, X_test: MatrixType, y_train: VectorType, y_test: VectorType, rejected_indices: LabelVectorType })` |
+| `Sklearn.Types.ThreeWaySplitConfigType` | `StructType({ val_size: OptionType<Float>, test_size: OptionType<Float>, random_state: OptionType<Integer>, shuffle: OptionType<Boolean>, stratify: OptionType<LabelVectorType>, min_stratify_samples: OptionType<Integer> })` |
+| `Sklearn.Types.ThreeWaySplitResultType` | `StructType({ X_train, X_val, X_test: MatrixType, Y_train, Y_val, Y_test: MatrixType, rejected_indices: LabelVectorType })` |
+| `Sklearn.Types.RegressionMetricType` | `VariantType({ mse, rmse, mae, r2, mape, explained_variance, max_error, median_ae, mean_error, pinball_loss: Float, huber: Float, mean_tweedie_deviance: Float })` |
 | `Sklearn.Types.ClassificationMetricType` | `VariantType({ accuracy, balanced_accuracy, precision, recall, f1, matthews_corrcoef, cohen_kappa, jaccard })` |
 | `Sklearn.Types.MetricAggregationType` | `VariantType({ per_target, uniform_average })` |
 | `Sklearn.Types.ClassificationAverageType` | `VariantType({ macro, micro, weighted, binary })` |
@@ -262,8 +262,8 @@ import { XGBoost } from "@elaraai/east-py-datascience";
 
 | Type | Description |
 |------|-------------|
-| `XGBoost.Types.XGBoostConfigType` | `StructType({ n_estimators: OptionType<Integer>, max_depth: OptionType<Integer>, learning_rate: OptionType<Float>, min_child_weight: OptionType<Integer>, subsample: OptionType<Float>, colsample_bytree: OptionType<Float>, reg_alpha: OptionType<Float>, reg_lambda: OptionType<Float>, random_state: OptionType<Integer>, n_jobs: OptionType<Integer>, sample_weight: OptionType<VectorType> })` |
-| `XGBoost.Types.XGBoostQuantileConfigType` | `StructType({ quantiles: VectorType, n_estimators: OptionType<Integer>, max_depth: OptionType<Integer>, learning_rate: OptionType<Float>, min_child_weight: OptionType<Integer>, subsample: OptionType<Float>, colsample_bytree: OptionType<Float>, reg_alpha: OptionType<Float>, reg_lambda: OptionType<Float>, random_state: OptionType<Integer>, n_jobs: OptionType<Integer>, sample_weight: OptionType<VectorType> })` |
+| `XGBoost.Types.XGBoostConfigType` | `StructType({ n_estimators: OptionType<Integer>, max_depth: OptionType<Integer>, learning_rate: OptionType<Float>, min_child_weight: OptionType<Integer>, subsample: OptionType<Float>, colsample_bytree: OptionType<Float>, reg_alpha: OptionType<Float>, reg_lambda: OptionType<Float>, gamma: OptionType<Float>, random_state: OptionType<Integer>, n_jobs: OptionType<Integer>, sample_weight: OptionType<VectorType>, categorical_features: OptionType<LabelVectorType>, max_cat_to_onehot: OptionType<Integer>, max_cat_threshold: OptionType<Integer> })` |
+| `XGBoost.Types.XGBoostQuantileConfigType` | `StructType({ quantiles: VectorType, n_estimators: OptionType<Integer>, max_depth: OptionType<Integer>, learning_rate: OptionType<Float>, min_child_weight: OptionType<Integer>, subsample: OptionType<Float>, colsample_bytree: OptionType<Float>, reg_alpha: OptionType<Float>, reg_lambda: OptionType<Float>, gamma: OptionType<Float>, random_state: OptionType<Integer>, n_jobs: OptionType<Integer>, sample_weight: OptionType<VectorType>, categorical_features: OptionType<LabelVectorType>, max_cat_to_onehot: OptionType<Integer>, max_cat_threshold: OptionType<Integer> })` |
 | `XGBoost.Types.XGBoostQuantilePredictResultType` | `StructType({ quantiles: VectorType, predictions: MatrixType })` |
 | `XGBoost.Types.ModelBlobType` | `xgboost_regressor`, `xgboost_classifier`, or `xgboost_quantile` |
 
@@ -596,7 +596,7 @@ Optuna.Types.ParamSpaceType    // StructType({ name, kind, low, high, choices })
 Optuna.Types.StudyResultType   // StructType({ best_params, best_score, trials })
 
 // Access Sklearn types
-Sklearn.Types.SplitConfigType  // StructType({ test_size, random_state, shuffle })
+Sklearn.Types.SplitConfigType  // StructType({ test_size, random_state, shuffle, stratify, min_stratify_samples })
 Sklearn.Types.ModelBlobType    // VariantType({ standard_scaler, min_max_scaler, ... })
 
 // Access XGBoost types
