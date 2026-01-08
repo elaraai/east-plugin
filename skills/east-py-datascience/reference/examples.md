@@ -318,8 +318,12 @@ const split = East.function([], Sklearn.Types.SplitResultType, $ => {
         test_size: variant('some', 0.2),
         random_state: variant('some', 42n),
         shuffle: variant('some', true),
+        stratify: variant('none', null),  // or variant('some', labels) for stratified split
+        min_stratify_samples: variant('none', null),  // default 2; classes with fewer samples are rejected
     });
-    return $.return(Sklearn.trainTestSplit(X, y, config));
+    const result = $.let(Sklearn.trainTestSplit(X, y, config));
+    // result.rejected_indices contains indices of samples from rare classes (if stratify used)
+    return $.return(result);
 });
 ```
 
@@ -339,8 +343,12 @@ const split = East.function([], Sklearn.Types.ThreeWaySplitResultType, $ => {
         test_size: variant('some', 0.15),
         random_state: variant('some', 42n),
         shuffle: variant('some', true),
+        stratify: variant('none', null),  // or variant('some', labels) for stratified split
+        min_stratify_samples: variant('none', null),  // default 3; classes with fewer samples are rejected
     });
-    return $.return(Sklearn.trainValTestSplit(X, Y, config));
+    const result = $.let(Sklearn.trainValTestSplit(X, Y, config));
+    // result.rejected_indices contains indices of samples from rare classes (if stratify used)
+    return $.return(result);
 });
 ```
 
@@ -358,6 +366,30 @@ const compute = East.function([], Sklearn.Types.MetricsResultType, $ => {
         y_true,
         y_pred,
         [variant('mse', null), variant('r2', null), variant('mae', null)]
+    ));
+    return $.return(results);
+});
+```
+
+### Parameterized Regression Metrics
+
+```typescript
+import { East, variant } from "@elaraai/east";
+import { Sklearn } from "@elaraai/east-py-datascience";
+
+const compute = East.function([], Sklearn.Types.MetricsResultType, $ => {
+    const y_true = $.let([1.0, 2.0, 3.0, 4.0, 5.0]);
+    const y_pred = $.let([1.1, 2.0, 2.9, 4.1, 5.0]);
+
+    const results = $.let(Sklearn.computeMetrics(
+        y_true,
+        y_pred,
+        [
+            variant('mean_error', null),           // Bias: mean(pred - true)
+            variant('pinball_loss', 0.5),          // Quantile loss (alpha=0.5 for median)
+            variant('huber', 1.0),                 // Robust loss (delta=1.0)
+            variant('mean_tweedie_deviance', 1.0), // Poisson deviance (power=1.0)
+        ]
     ));
     return $.return(results);
 });
@@ -489,9 +521,13 @@ const train = East.function([], XGBoost.Types.ModelBlobType, $ => {
         colsample_bytree: variant('none', null),
         reg_alpha: variant('none', null),
         reg_lambda: variant('none', null),
+        gamma: variant('none', null),  // min loss reduction for split (default 0)
         random_state: variant('some', 42n),
         n_jobs: variant('none', null),
         sample_weight: variant('none', null),
+        categorical_features: variant('none', null),  // column indices for categoricals
+        max_cat_to_onehot: variant('none', null),
+        max_cat_threshold: variant('none', null),
     });
     return $.return(XGBoost.trainRegressor(X, y, config));
 });
@@ -517,9 +553,13 @@ const trainQuantile = East.function([], XGBoost.Types.ModelBlobType, $ => {
         colsample_bytree: variant('none', null),
         reg_alpha: variant('none', null),
         reg_lambda: variant('none', null),
+        gamma: variant('none', null),
         random_state: variant('some', 42n),
         n_jobs: variant('none', null),
         sample_weight: variant('none', null),
+        categorical_features: variant('none', null),
+        max_cat_to_onehot: variant('none', null),
+        max_cat_threshold: variant('none', null),
     });
     return $.return(XGBoost.trainQuantile(X, y, config));
 });
