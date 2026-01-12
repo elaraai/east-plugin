@@ -89,12 +89,34 @@ jobs:
             echo "Changes detected"
           fi
 
+      - name: Bump version
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          # Read current version
+          CURRENT_VERSION=$(jq -r '.version' .claude-plugin/plugin.json)
+          echo "Current version: $CURRENT_VERSION"
+
+          # Parse version parts (major.minor.patch)
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+
+          # Increment patch version
+          NEW_PATCH=$((PATCH + 1))
+          NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+          echo "New version: $NEW_VERSION"
+
+          # Update plugin.json
+          jq --arg v "$NEW_VERSION" '.version = $v' .claude-plugin/plugin.json > .claude-plugin/plugin.json.tmp
+          mv .claude-plugin/plugin.json.tmp .claude-plugin/plugin.json
+
+          git add .claude-plugin/plugin.json
+          echo "new_version=${NEW_VERSION}" >> $GITHUB_ENV
+
       - name: Create branch and commit
         if: steps.changes.outputs.has_changes == 'true'
         run: |
           BRANCH_NAME="docs/update-skills-$(date +%Y%m%d)"
           git checkout -b "$BRANCH_NAME"
-          git commit -m "docs: update skills from source repos"
+          git commit -m "docs: update skills from source repos (v${{ env.new_version }})"
           git push -u --force "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/elaraai/east-plugin.git" "$BRANCH_NAME"
           echo "branch_name=${BRANCH_NAME}" >> $GITHUB_ENV
 
@@ -106,8 +128,8 @@ jobs:
           # Check if PR already exists for this branch
           EXISTING_PR=$(gh pr list --head "${{ env.branch_name }}" --json number --jq '.[0].number' 2>/dev/null || echo "")
 
-          PR_TITLE="docs: update skills from source repos"
-          PR_BODY="## Skills Update
+          PR_TITLE="docs: update skills from source repos (v${{ env.new_version }})"
+          PR_BODY="## Skills Update (v${{ env.new_version }})
 
           Synced SKILL.md and reference docs from source repositories:
           - east
