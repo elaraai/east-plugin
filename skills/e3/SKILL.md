@@ -1,6 +1,6 @@
 ---
 name: e3
-description: East Execution Engine (e3) - durable dataflow execution for East programs. Use when: (1) Authoring e3 packages with @elaraai/e3 (e3.input, e3.task, e3.package, e3.export), (2) Running e3 CLI commands (e3 init, e3 start, e3 watch, e3 get, e3 set), (3) Working with workspaces and packages, (4) Content-addressable caching and dataflow execution.
+description: "East Execution Engine (e3) - durable dataflow execution for East programs. Use when: (1) Authoring e3 packages with @elaraai/e3 (e3.input, e3.task, e3.package, e3.export), (2) Running e3 CLI commands (e3 repo create, e3 start, e3 watch, e3 get, e3 set), (3) Working with workspaces and packages, (4) Content-addressable caching and dataflow execution."
 ---
 
 # East Execution Engine (e3)
@@ -33,8 +33,8 @@ export default pkg;
 ```
 
 ```bash
-# Initialize repository
-e3 init .
+# Create repository
+e3 repo create .
 
 # Import and deploy
 e3 package import . /tmp/hello.zip
@@ -123,9 +123,10 @@ await e3.export(pkg, '/tmp/myapp.zip');
 ### Repository Commands
 
 ```bash
-e3 init <repo>                    # Initialize repository
-e3 status <repo> [workspace]      # Show status
-e3 gc <repo> [--dry-run]          # Garbage collect
+e3 repo create <repo>             # Create a new repository
+e3 repo status <repo>             # Show repository status
+e3 repo remove <repo>             # Remove a repository
+e3 repo gc <repo> [--dry-run]     # Garbage collect unreferenced objects
 ```
 
 ### Package Commands
@@ -144,6 +145,7 @@ e3 workspace create <repo> <name>           # Create workspace
 e3 workspace deploy <repo> <ws> <pkg[@ver]> # Deploy package
 e3 workspace export <repo> <ws> <zipPath>   # Export workspace
 e3 workspace list <repo>                    # List workspaces
+e3 workspace status <repo> <ws>             # Show workspace status
 e3 workspace remove <repo> <ws>             # Remove workspace
 ```
 
@@ -151,6 +153,7 @@ e3 workspace remove <repo> <ws>             # Remove workspace
 
 ```bash
 e3 list <repo> [path]                       # List tree contents
+e3 tree <repo> <path>                       # Show full tree structure
 e3 get <repo> <path> [-f east|json|beast2]  # Get dataset value
 e3 set <repo> <path> <file> [--type <spec>] # Set dataset from file
 ```
@@ -176,6 +179,28 @@ e3 logs <repo> <path> [--follow]
 
 ```bash
 e3 convert [input] [--from <fmt>] [--to <fmt>] [-o <output>]
+```
+
+### Authentication (for remote servers)
+
+```bash
+e3 login <url>                    # Authenticate with remote server
+e3 logout <url>                   # Clear stored credentials
+e3 auth status                    # Show authentication status
+```
+
+### Remote URLs
+
+All commands accept HTTP URLs instead of local paths:
+
+```bash
+# Start a server
+e3-api-server --repos ./repos --port 3000
+
+# Use remote repository
+e3 repo create http://localhost:3000/repos/my-repo
+e3 workspace list http://localhost:3000/repos/my-repo
+e3 package import http://localhost:3000/repos/my-repo ./pkg.zip
 ```
 
 ## Development Workflow
@@ -205,7 +230,7 @@ e3 start . dev
 | `@elaraai/e3-types` | Shared type definitions |
 | `@elaraai/e3-core` | Core library (workspaces, execution, caching) |
 | `@elaraai/e3-cli` | CLI tool |
-| `@elaraai/e3-api-client` | HTTP client |
+| `@elaraai/e3-api-client` | HTTP client for remote servers |
 | `@elaraai/e3-api-server` | REST API server |
 
 ## Project Structure
@@ -217,7 +242,10 @@ my-project/
 ├── pyproject.toml      # For Python runner
 ├── src/
 │   └── index.ts        # Package definition
-└── .e3/                # Repository
+└── repo/               # Repository (created by e3 repo create)
+    ├── objects/        # Content-addressable object store
+    ├── packages/       # Package metadata
+    └── workspaces/     # Workspace state
 ```
 
 ## Caching
