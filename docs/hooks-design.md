@@ -1571,6 +1571,130 @@ examples: [collections.example.ts]
 - **Action verbs**: `sum`, `iterate`, `filter`, `map`, `query`, `fetch`
 - **Problem terms**: `aggregate`, `transform`, `process`, `optimize`, `train`
 
+#### API Signature Tables (Required)
+
+Every reference file MUST include a signature table for each function/method. **Precise argument names and types are critical** for agents to generate correct code. Use this consistent format across ALL reference files:
+
+**Standard format:**
+
+```markdown
+| Function | Arguments | Returns | Description |
+|----------|-----------|---------|-------------|
+| `East.function` | `<P extends Type[], R extends Type>(params: P, returnType: R, body: ($: BlockBuilder, ...args: ExpressionFor<P>) => void)` | `EastFunction<P, R>` | Define a synchronous East function |
+| `East.asyncFunction` | `<P extends Type[], R extends Type>(params: P, returnType: R, body: ($: BlockBuilder, ...args: ExpressionFor<P>) => Promise<void>)` | `EastAsyncFunction<P, R>` | Define an async East function |
+```
+
+**Critical: Document BlockBuilder (`$`) operations:**
+
+The `$` parameter is a `BlockBuilder`. All control flow and variable declarations use `$`:
+
+```markdown
+| Category | Method | Description |
+|----------|--------|-------------|
+| **Variables** | `$.let(value)` | Declare mutable variable, returns expression |
+| | `$.let(value, Type)` | Declare with explicit type |
+| | `$.const(value)` | Declare immutable variable |
+| | `$.assign(variable, value)` | Reassign mutable variable |
+| **Execute** | `$(expr)` | Execute expression (for side effects) |
+| | `$.return(value)` | Return value (required in every function) |
+| | `$.error(message)` | Throw error |
+| **Control Flow** | `$.if(cond, $ => {...})` | Conditional (then branch) |
+| | `$.if(cond, $ => {...}, $ => {...})` | Conditional (then + else) |
+| | `$.while($ => cond, $ => {...})` | While loop |
+| | `$.for(array, ($, elem, index) => {...})` | For-each loop |
+| | `$.match(variant, { case: ($, val) => {...} })` | Pattern match on variant |
+| **Error Handling** | `$.try($ => {...}).catch(($, msg, stack) => {...})` | Try-catch |
+| | `.finally($ => {...})` | Finally block (chainable) |
+```
+
+**Note**: `$.let()` and `$.const()` do NOT take a name string - they return the expression directly:
+```typescript
+const total = $.let(arr.sum());           // CORRECT
+const total = $.let("total", arr.sum());  // WRONG - no name parameter
+```
+
+**Critical: Function parameters vs method arguments:**
+
+Function parameters are East expressions. But method arguments accept **unions** of expression OR TypeScript value:
+
+```markdown
+| Context | Type Pattern | Example |
+|---------|--------------|---------|
+| **Function params** | Always expressions | `($, x: IntegerExpr, arr: ArrayExpr<IntegerType>)` |
+| **Method args** | `ExprType<T> \| ValueTypeOf<T>` | `arr.get(0n)` or `arr.get(indexExpr)` |
+| **External constants** | Must wrap with `East.value()` or `$.const()` | `x.greaterThan(East.value(100n))` |
+```
+
+**Type mappings (for signatures):**
+
+```markdown
+| East Type | Expression Type | TypeScript Value (`ValueTypeOf<T>`) |
+|-----------|-----------------|-------------------------------------|
+| `IntegerType` | `IntegerExpr` | `bigint` |
+| `FloatType` | `FloatExpr` | `number` |
+| `StringType` | `StringExpr` | `string` |
+| `BooleanType` | `BooleanExpr` | `boolean` |
+| `DateTimeType` | `DateTimeExpr` | `Date` |
+| `BlobType` | `BlobExpr` | `Uint8Array` |
+| `ArrayType(T)` | `ArrayExpr<T>` | `ValueTypeOf<T>[]` |
+| `SetType(K)` | `SetExpr<K>` | `Set<ValueTypeOf<K>>` |
+| `DictType(K, V)` | `DictExpr<K, V>` | `Map<ValueTypeOf<K>, ValueTypeOf<V>>` |
+| `StructType({...})` | `StructExpr<{...}>` | `{...}` (object) |
+| `VariantType({...})` | `VariantExpr<{...}>` | `variant` (use `some()`, `none`, `variant()`) |
+| `RefType(T)` | `RefExpr<T>` | `ref<ValueTypeOf<T>>` |
+```
+
+**Method signature pattern (from STANDARDS.md):**
+
+```markdown
+| Signature | Description | Example |
+|-----------|-------------|---------|
+| `get<V>(index: IntegerExpr \| bigint): ExprType<V>` **❗** | Get element (errors if out of bounds) | `array.get(0n)` |
+| `has(index: IntegerExpr \| bigint): BooleanExpr` | Check if index valid | `array.has(5n)` |
+| `pushLast<V>(value: ExprType<V> \| ValueTypeOf<V>): NullExpr` | Append to end | `array.pushLast(42n)` |
+```
+
+Use **❗** after return type for operations that can throw errors.
+
+**For methods on expressions:**
+
+```markdown
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `arr.sum()` | `(): IntegerExpr \| FloatExpr` | Sum all numeric elements |
+| `arr.map(fn)` | `(fn: (elem: T) => U): ArrayExpr<U>` | Transform each element |
+| `arr.filter(fn)` | `(fn: (elem: T) => BooleanExpr): ArrayExpr<T>` | Keep matching elements |
+| `arr.reduce(fn, init)` | `(fn: (acc: U, elem: T) => U, init: U): U` | Reduce to single value |
+```
+
+**For platform functions:**
+
+```markdown
+| Function | Arguments | Returns | Description |
+|----------|-----------|---------|-------------|
+| `FileSystem.readFile` | `(path: StringExpr, encoding?: StringExpr)` | `StringExpr` | Read file contents as string |
+| `FileSystem.writeFile` | `(path: StringExpr, content: StringExpr)` | `VoidExpr` | Write string to file |
+| `FileSystem.exists` | `(path: StringExpr)` | `BooleanExpr` | Check if path exists |
+```
+
+**Rules for signature tables:**
+
+1. **Always include argument names** - Not just types. `(path: StringExpr)` not `(StringExpr)`
+2. **Use exact type names** - `IntegerExpr`, `ArrayExpr<T>`, `StringExpr`, not `number`, `array`, `string`
+3. **Show generic parameters** - `ArrayExpr<T>`, `DictExpr<K, V>`, not just `ArrayExpr`
+4. **Include optional arguments** - Use `?` syntax: `(encoding?: StringExpr)`
+5. **Show callback signatures** - `(fn: (elem: T) => U)` not just `(fn)`
+6. **Group related functions** - One table per logical group (e.g., all Array methods together)
+
+**Why this matters:**
+
+| Without precise signatures | With precise signatures |
+|---------------------------|------------------------|
+| Agent guesses argument order | Agent knows exact order |
+| Agent uses wrong types (`string` vs `StringExpr`) | Agent uses correct East types |
+| Agent misses optional parameters | Agent includes all options |
+| Agent invents non-existent methods | Agent uses only real API |
+
 #### Example File Format
 
 Every `.example.ts` file must:
