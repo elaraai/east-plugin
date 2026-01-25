@@ -1,22 +1,27 @@
 #!/usr/bin/env bash
 # East Development Environment Update Script
-# Usage: curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/update-dev.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/global/update-dev.sh | bash
 #
 # Pulls latest changes and rebuilds all East repositories.
 
 set -e
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
-log_success() { echo -e "${GREEN}[OK]${NC} $1"; }
-log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
-log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+# Source shared utilities (works both locally and via curl | bash)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+if [ -f "$SCRIPT_DIR/../lib/common.sh" ]; then
+    source "$SCRIPT_DIR/../lib/common.sh"
+else
+    # Fallback for curl | bash - define inline
+    RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; BLUE='\033[0;34m'; NC='\033[0m'
+    log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
+    log_success() { echo -e "${GREEN}[OK]${NC} $1"; }
+    log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
+    log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+    source_nvm() {
+        export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    }
+fi
 
 # Configuration
 EAST_DIR="${EAST_DIR:-$HOME/east}"
@@ -38,10 +43,8 @@ fi
 cd "$EAST_DIR"
 
 # Source nvm
-if [ -s "$HOME/.nvm/nvm.sh" ]; then
-    export NVM_DIR="$HOME/.nvm"
-    \. "$NVM_DIR/nvm.sh"
-else
+source_nvm
+if ! command -v nvm &> /dev/null; then
     log_error "nvm not found. Run install-dev.sh first."
     exit 1
 fi

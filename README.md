@@ -47,35 +47,59 @@ A Claude Code plugin for the East programming language ecosystem.
 /plugin install east
 ```
 
+## Project Scaffolding
+
+Create new East projects with a single command:
+
+**East project** (AGPL-3.0, Node.js only):
+```bash
+curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/project/east.sh | bash
+```
+
+**e3 project** (BSL-1.1, Node.js + Python):
+```bash
+curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/project/e3.sh | bash
+```
+
+| Script | License | Contents |
+|--------|---------|----------|
+| `scripts/project/east.sh` | AGPL-3.0 | east, east-node-std, east-node-io |
+| `scripts/project/e3.sh` | BSL-1.1 | Everything in east + e3, east-py-datascience |
+
+Generated projects include:
+- TypeScript configuration with strict mode
+- Makefile with `install`, `build`, `run`, `test`, `refresh` targets
+- Example East function ready to build and run
+
 ## Local Installation
 
 Install the East CLIs directly on your machine (Linux/macOS):
 
 **For users** (installs CLIs from npm/PyPI):
 ```bash
-curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/global/install.sh | bash
 ```
 
 **For contributors** (clones all repos and builds from source):
 ```bash
-curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/install-dev.sh | bash
+curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/global/install-dev.sh | bash
 ```
 
 | Script | What it does | Requirements |
 |--------|--------------|--------------|
-| `install.sh` | Installs CLIs globally from npm/PyPI | `curl`, `git` |
-| `install-dev.sh` | Clones all repos to `~/east`, builds and tests them | `curl`, `git`, `make` |
-| `update.sh` | Updates CLIs to latest versions | `npm` |
-| `update-dev.sh` | Pulls latest and rebuilds all repos | `git`, `make` |
+| `scripts/global/install.sh` | Installs CLIs globally from npm/PyPI | `curl`, `git` |
+| `scripts/global/install-dev.sh` | Clones all repos to `~/east`, builds and tests them | `curl`, `git`, `make` |
+| `scripts/global/update.sh` | Updates CLIs to latest versions | `npm` |
+| `scripts/global/update-dev.sh` | Pulls latest and rebuilds all repos | `git`, `make` |
 
 **Update CLIs** (fetches latest versions from npm/PyPI):
 ```bash
-curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/update.sh | bash
+curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/global/update.sh | bash
 ```
 
 **Update repos** (pulls latest commits and rebuilds from source):
 ```bash
-curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/update-dev.sh | bash
+curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/global/update-dev.sh | bash
 ```
 
 Both install scripts install:
@@ -129,6 +153,22 @@ These Docker images are compatible with Firecracker microVMs via:
 - [Kata Containers](https://katacontainers.io/) - Run OCI images in Firecracker
 - [Ignite](https://github.com/weaveworks/ignite) - `ignite run ghcr.io/elaraai/e3`
 - AWS Lambda (uses Firecracker under the hood)
+
+## Testing
+
+Run all tests:
+```bash
+./tests/test-all.sh          # All tests including Docker builds
+./tests/test-all.sh --quick  # Skip Docker builds
+```
+
+Individual test scripts:
+| Script | What it tests |
+|--------|---------------|
+| `tests/test-scripts-syntax.sh` | Bash syntax validation for all scripts |
+| `tests/test-project-east.sh` | East project scaffolding, install, build, run |
+| `tests/test-project-e3.sh` | e3 project scaffolding, install, build, e3 export |
+| `tests/test-docker-builds.sh` | Docker image builds |
 
 ## Links
 

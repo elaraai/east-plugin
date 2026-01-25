@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # East CLI Installation Script
-# Usage: curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/global/install.sh | bash
 #        curl -fsSL ... | bash -s -- -y   # Non-interactive mode
 #
 # Options:
@@ -19,27 +19,32 @@ for arg in "$@"; do
     esac
 done
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
-log_success() { echo -e "${GREEN}[OK]${NC} $1"; }
-log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
-log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
-
-# Prompt helper - returns 0 (true) if user confirms or AUTO_YES is set
-confirm() {
-    if [ "$AUTO_YES" = true ]; then
-        return 0
-    fi
-    read -p "$1 [y/N] " -n 1 -r
-    echo
-    [[ $REPLY =~ ^[Yy]$ ]]
-}
+# Source shared utilities (works both locally and via curl | bash)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+if [ -f "$SCRIPT_DIR/../lib/common.sh" ]; then
+    source "$SCRIPT_DIR/../lib/common.sh"
+else
+    # Fallback for curl | bash - define inline
+    RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; BLUE='\033[0;34m'; NC='\033[0m'
+    log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
+    log_success() { echo -e "${GREEN}[OK]${NC} $1"; }
+    log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
+    log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+    confirm() {
+        if [ "${AUTO_YES:-false}" = true ]; then return 0; fi
+        read -p "$1 [y/N] " -n 1 -r < /dev/tty; echo
+        case "$REPLY" in [Yy]) return 0 ;; *) return 1 ;; esac
+    }
+    run_as_root() {
+        if [ "$(id -u)" -eq 0 ]; then "$@"
+        elif command -v sudo &> /dev/null; then sudo "$@"
+        else log_error "Need root but no sudo"; return 1; fi
+    }
+    source_nvm() {
+        export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    }
+fi
 
 NODE_VERSION="22"
 
@@ -73,12 +78,6 @@ install_nvm() {
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 
     log_success "nvm installed"
-}
-
-# Source nvm
-source_nvm() {
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 }
 
 # Install uv if not present
@@ -244,18 +243,6 @@ check_dependencies() {
 
     log_warn "Missing dependencies: ${missing[*]}"
     echo ""
-
-    # Helper to run as root (use sudo if available and not already root)
-    run_as_root() {
-        if [ "$(id -u)" -eq 0 ]; then
-            "$@"
-        elif command -v sudo &> /dev/null; then
-            sudo "$@"
-        else
-            log_error "Need root privileges but sudo not available"
-            exit 1
-        fi
-    }
 
     # Detect package manager and offer to install
     if command -v apt-get &> /dev/null; then

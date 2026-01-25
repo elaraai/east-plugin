@@ -25,8 +25,27 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Run tests (quick)
+        run: ./tests/test-all.sh --quick
+
   build-east-node:
     name: Build east-node (AGPL)
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -117,6 +136,7 @@ jobs:
 
   build-e3:
     name: Build e3 (BSL + AGPL)
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       contents: read

@@ -19,7 +19,7 @@ The user invoked this command with: $ARGUMENTS
 
 3. Run the compile script:
    ```bash
-   bash ${CLAUDE_PLUGIN_ROOT}/scripts/compile.sh <file>
+   bash ${CLAUDE_PLUGIN_ROOT}/scripts/east/compile.sh <file>
    ```
 
 4. If the script is not available or fails, fall back to:

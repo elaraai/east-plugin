@@ -30,6 +30,17 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Run tests (quick)
+        run: ./tests/test-all.sh --quick
+
       - name: Bump version
         run: |
           # Read current version

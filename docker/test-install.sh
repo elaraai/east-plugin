@@ -20,17 +20,17 @@ for arg in "$@"; do
     esac
 done
 
-echo "Testing scripts/$SCRIPT.sh in fresh Ubuntu container..."
+echo "Testing scripts/global/$SCRIPT.sh in fresh Ubuntu container..."
 [ -n "$YES_FLAG" ] && echo "  (non-interactive mode)"
 echo ""
 
 # For local testing, mount the current directory
-if [ -f "scripts/$SCRIPT.sh" ]; then
-    echo "Using local script from ./scripts/$SCRIPT.sh"
+if [ -f "scripts/global/$SCRIPT.sh" ]; then
+    echo "Using local script from ./scripts/global/$SCRIPT.sh"
     docker run -it --rm \
         -v "$(pwd)/scripts:/scripts:ro" \
         ubuntu:24.04 \
-        bash -c "bash /scripts/$SCRIPT.sh $YES_FLAG"
+        bash -c "bash /scripts/global/$SCRIPT.sh $YES_FLAG"
 else
     echo "Local script not found. Run from repo root."
     exit 1
