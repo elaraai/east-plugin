@@ -14,7 +14,7 @@ Additionally:
 ## Goals
 
 1. **Project Detection**: When Claude opens in a project with East dependencies, proactively inform about available skills
-2. **Contextual Doc Injection**: When users ask about East topics, search and inject relevant docs from `reference/api.md` and `reference/examples.md`
+2. **Contextual Doc Injection**: When users ask about East topics, search and inject relevant docs from granular `reference/*.md` files
 3. **Skill-Scoped**: Only inject docs relevant to the specific East package being used
 
 ## Available Hook Events
@@ -61,8 +61,11 @@ east-plugin/
 │   ├── east/
 │   │   ├── SKILL.md
 │   │   └── reference/
-│   │       ├── api.md
-│   │       └── examples.md
+│   │       ├── types.md
+│   │       ├── types.example.ts
+│   │       ├── functions.md
+│   │       ├── functions.example.ts
+│   │       └── ...
 │   ├── east-node-std/
 │   │   └── ...
 │   └── ...
@@ -513,40 +516,6 @@ interface IndexedDocument {
 4. `exampleCode` (boosted 1.2x) - actual TypeScript examples
 5. `content` (boosted 1x) - markdown prose
 
-### Migration Path
-
-1. **Phase 1**: Add YAML frontmatter to existing api.md/examples.md sections
-2. **Phase 2**: Split large files into topic-focused files
-3. **Phase 3**: Update SKILL.md to reference new structure
-
-For Phase 1, we can use `---` markers within existing files:
-
-```markdown
-# East API Reference
-
----
-title: East Namespace
-keywords: [East.function, East.asyncFunction, East.compile, East.value]
-summary: Main entry point for creating East programs
----
-
-## East Namespace
-
-Main entry point for building East programs...
-
----
-title: BlockBuilder Operations
-keywords: [$.let, $.const, $.return, $.if, $.while, $.for]
-summary: Operations available within function bodies via the $ parameter
----
-
-## BlockBuilder Operations
-
-The first argument ($) in function body provides...
-```
-
-This allows incremental migration without breaking existing structure.
-
 ## Search Algorithm
 
 We use MiniSearch for full-text search with field boosting, searching **the entire user prompt** against all indexed documents.
@@ -561,17 +530,10 @@ interface DocumentFrontmatter {
   keywords: string[];
   summary?: string;
   related?: string[];
+  examples?: string[];
 }
 
-interface IndexedDocument {
-  id: string;
-  skill: string;
-  path: string;
-  title: string;
-  keywords: string[];
-  summary: string;
-  content: string;
-}
+// See IndexedDocument definition in "Indexing Strategy" section above
 
 function parseDocument(content: string, skillName: string, filePath: string): IndexedDocument[] {
   const docs: IndexedDocument[] = [];
@@ -793,8 +755,9 @@ east-plugin/
 │   ├── east/
 │   │   ├── SKILL.md
 │   │   └── reference/
-│   │       ├── api.md
-│   │       └── examples.md
+│   │       ├── types.md, types.example.ts
+│   │       ├── functions.md, functions.example.ts
+│   │       └── ...
 │   └── ...
 ├── hooks/
 │   └── src/
@@ -811,29 +774,26 @@ east-plugin/
 {
   "version": 1,
   "built": "2024-01-15T10:30:00Z",
-  "skills": {
-    "east": {
-      "sections": [
-        {
-          "id": "east:api:east-namespace",
-          "source": "api.md",
-          "header": "East Namespace",
-          "content": "Main entry point for building East programs...",
-          "keywords": ["east.function", "east.compile", "east.value", "function", "compile"]
-        },
-        {
-          "id": "east:api:blockbuilder",
-          "source": "api.md",
-          "header": "BlockBuilder Operations",
-          "content": "The first argument ($) in function body...",
-          "keywords": ["$.let", "$.const", "$.return", "$.if", "variable", "return"]
-        }
-      ]
+  "documents": [
+    {
+      "id": "east:types.md:primitive-types",
+      "skill": "east",
+      "path": "types.md",
+      "title": "Primitive Types",
+      "keywords": ["IntegerType", "FloatType", "StringType", "BooleanType"],
+      "summary": "Basic scalar types for East programs",
+      "content": "East provides primitive types for..."
     },
-    "east-node-std": {
-      "sections": [...]
+    {
+      "id": "east:functions.md:defining-functions",
+      "skill": "east",
+      "path": "functions.md",
+      "title": "Defining Functions",
+      "keywords": ["East.function", "East.asyncFunction", "$.return"],
+      "summary": "How to define East functions",
+      "content": "Use East.function() to create..."
     }
-  }
+  ]
 }
 ```
 
@@ -855,17 +815,10 @@ interface Frontmatter {
   title: string;
   keywords: string[];
   summary?: string;
+  examples?: string[];
 }
 
-interface IndexedDocument {
-  id: string;
-  skill: string;
-  path: string;
-  title: string;
-  keywords: string[];
-  summary: string;
-  content: string;
-}
+// IndexedDocument - see "Indexing Strategy" section for full definition
 
 interface Index {
   version: number;
@@ -974,15 +927,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import MiniSearch from 'minisearch';
 
-interface IndexedDocument {
-  id: string;
-  skill: string;
-  path: string;
-  title: string;
-  keywords: string[];
-  summary: string;
-  content: string;
-}
+// IndexedDocument - see "Indexing Strategy" section for full definition
 
 interface IndexData {
   version: number;
@@ -1058,11 +1003,12 @@ export function search(query: string, options: SearchOptions = {}) {
 ### UserPromptSubmit Hook
 
 ```
-1. Quick check: does prompt contain East-related keywords?
-   - If no: exit 0 immediately (no injection, <10ms)
-2. Read package.json to get project East dependencies
-3. Load search index (from SessionStart or re-init)
-4. Search index with prompt, filtered by relevant skills
+1. Check if this is an East project (cached from SessionStart)
+   - If not an East project: exit 0 immediately (no injection, <10ms)
+2. Load search index (cached in memory)
+3. Full-text search with entire prompt, filtered by project dependencies
+4. Check result quality:
+   - If top result score < threshold (e.g., 5.0): exit 0 (no injection)
 5. Format top 3-5 results (max 4000 chars)
 6. Output JSON with additionalContext
 7. Exit 0
@@ -1189,13 +1135,16 @@ east-plugin/
 │   ├── east/
 │   │   ├── SKILL.md
 │   │   └── reference/
-│   │       ├── api.md
-│   │       └── examples.md
+│   │       ├── types.md, types.example.ts
+│   │       ├── functions.md, functions.example.ts
+│   │       ├── expressions.md, expressions.example.ts
+│   │       └── compilation.md, compilation.example.ts
 │   ├── east-node-std/
 │   │   ├── SKILL.md
 │   │   └── reference/
-│   │       ├── api.md
-│   │       └── examples.md
+│   │       ├── console.md, console.example.ts
+│   │       ├── filesystem.md, filesystem.example.ts
+│   │       └── ... (other topics)
 │   └── ... (other skills)
 ├── commands/                         # Claude Code slash commands
 │   ├── compile.md
@@ -1389,7 +1338,8 @@ export default [
     "eslint": "^9.34.0",
     "minisearch": "^7.1.0",
     "tsx": "^4.19.2",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "yaml": "^2.7.0"
   }
 }
 ```
@@ -1653,6 +1603,60 @@ export const filterPositive = East.function(
 );
 ```
 
+#### TypeScript Configuration for Examples
+
+Example files use the same import paths that end users would use (e.g., `import { East } from "@elaraai/east"`). To compile these against local source during development, each package needs **path mapping** in its tsconfig.
+
+**How path mapping works:**
+- TypeScript resolves `@elaraai/east` → `./src/index.ts` during compilation
+- The compiled JS output keeps `@elaraai/east` unchanged (TypeScript doesn't rewrite imports)
+- Example files are NOT published to npm, so this only affects local type-checking
+
+**Required tsconfig.json for each package:**
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@elaraai/east": ["./src/index.ts"]
+    },
+    // ... other options
+  },
+  "include": ["src/**/*.ts", "reference/**/*.example.ts"]
+}
+```
+
+**For packages that depend on other East packages** (e.g., `east-node-std` depends on `east`):
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@elaraai/east": ["../../east/src/index.ts"],
+      "@elaraai/east-node-std": ["./src/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "reference/**/*.example.ts"]
+}
+```
+
+**Exclude reference/ from npm package:**
+
+Each package's `package.json` should specify `files` to exclude examples from the published package:
+
+```json
+{
+  "files": ["dist", "src", "SKILL.md"]
+}
+```
+
+Or use `.npmignore`:
+```
+reference/
+```
+
 #### Best Practices
 
 When defining a package's reference markdown and examples, developers should:
@@ -1703,14 +1707,24 @@ When defining a package's reference markdown and examples, developers should:
 
 #### 3.1 Example Compilation Tests
 
-Add to each source repo's CI:
+Example files are compiled as part of the main build since they're included in the tsconfig's `include` array. The existing CI build step verifies examples:
 
 ```yaml
-- name: Compile reference examples
-  run: |
-    cd reference
-    npx tsc --noEmit *.example.ts
+- name: Build package
+  run: npm run build  # tsc compiles src/ AND reference/*.example.ts
+
+- name: Verify examples compile
+  run: npx tsc --noEmit  # Type-check only, uses tsconfig.json with path mapping
 ```
+
+If a package wants a separate examples check:
+
+```yaml
+- name: Type-check reference examples
+  run: npx tsc --noEmit --project tsconfig.json reference/**/*.example.ts
+```
+
+**Note**: Examples must be compiled with the package's tsconfig.json to use path mapping. A bare `tsc *.example.ts` will fail because it can't resolve `@elaraai/*` imports.
 
 #### 3.2 Hook Integration Tests
 
