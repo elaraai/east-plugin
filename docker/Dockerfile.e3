@@ -8,6 +8,26 @@
 #   docker build -f Dockerfile.e3 -t ghcr.io/elaraai/e3 .
 #   docker run --rm -v $(pwd):/workspace ghcr.io/elaraai/e3 e3 run my-pipeline
 
+# Build east-c from source
+FROM node:22-slim AS east-c-build
+
+ARG EAST_C_VERSION=main
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    git \
+    cmake \
+    make \
+    gcc \
+    libc6-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN git clone --depth 1 --branch "${EAST_C_VERSION}" \
+    https://github.com/elaraai/east-c.git /tmp/east-c && \
+    cd /tmp/east-c && \
+    mkdir build && cd build && \
+    cmake .. && cmake --build . -j$(nproc)
+
 FROM node:22-slim AS base
 
 LABEL org.opencontainers.image.source="https://github.com/elaraai/east-plugin"
@@ -68,6 +88,9 @@ COPY docker/install-packages.sh /tmp/install-packages.sh
 RUN chmod +x /tmp/install-packages.sh && \
     /tmp/install-packages.sh && \
     rm /tmp/install-packages.sh
+
+# Copy east-c-cli binary from build stage
+COPY --from=east-c-build /tmp/east-c/build/packages/east-c-cli/east-c /usr/local/bin/east-c
 
 # Create compile environment for single-file type-checking
 RUN mkdir -p /compile && \
