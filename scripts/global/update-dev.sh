@@ -81,9 +81,10 @@ update_repo() {
         }
     fi
 
-    # Rebuild
+    # Update @elaraai packages and rebuild
+    npm update $(grep -roh '"@elaraai/[^"]*"' --include='package.json' . | tr -d '"' | sort -u | tr '\n' ' ') 2>/dev/null || true
     if [ -f "Makefile" ]; then
-        make install && make build && log_success "Built $repo" || {
+        make build && log_success "Built $repo" || {
             log_warn "Build failed for $repo"
             cd "$EAST_DIR"
             return 1

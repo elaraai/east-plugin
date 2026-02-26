@@ -116,12 +116,12 @@ install_node() {
 install_node_clis() {
     source_nvm
 
-    log_info "Installing @elaraai/east-node-cli..."
-    npm install -g @elaraai/east-node-cli
+    log_info "Installing @elaraai/east-node-cli@beta..."
+    npm install -g @elaraai/east-node-cli@beta
     log_success "east-node CLI installed"
 
-    log_info "Installing @elaraai/e3-cli..."
-    npm install -g @elaraai/e3-cli
+    log_info "Installing @elaraai/e3-cli@beta..."
+    npm install -g @elaraai/e3-cli@beta
     log_success "e3-cli installed"
 }
 

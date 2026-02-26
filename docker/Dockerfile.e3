@@ -40,7 +40,7 @@ ENV E3_CLI_VERSION=${E3_CLI_VERSION:-latest}
 ENV E3_API_CLIENT_VERSION=${E3_API_CLIENT_VERSION:-latest}
 ENV E3_API_SERVER_VERSION=${E3_API_SERVER_VERSION:-latest}
 
-# Install system dependencies including Python
+# Install system dependencies including Python and C compiler for Cython extensions
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     git \
@@ -48,6 +48,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     python3-pip \
     python3-venv \
+    python3-dev \
+    gcc \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv for Python package management

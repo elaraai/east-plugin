@@ -1146,13 +1146,9 @@ east-plugin/
 │   │       ├── filesystem.md, filesystem.example.ts
 │   │       └── ... (other topics)
 │   └── ... (other skills)
-├── commands/                         # Claude Code slash commands
-│   ├── compile.md
-│   └── e3-*.md
 ├── scripts/
 │   ├── lib/                          # Shared bash libraries
-│   │   ├── common.sh
-│   │   └── docker-fallback.sh
+│   │   └── common.sh
 │   ├── global/                       # Global install scripts
 │   │   ├── install.sh
 │   │   ├── install-dev.sh

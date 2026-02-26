@@ -28,8 +28,7 @@ There are three distinct scopes for installation/updates:
 ```
 scripts/
 ├── lib/
-│   ├── common.sh                 # Logging, prompts, nvm sourcing
-│   └── docker-fallback.sh        # Docker/local CLI fallback pattern
+│   └── common.sh                 # Logging, prompts, nvm sourcing
 │
 ├── global/                       # GLOBAL SCOPE: User's machine
 │   ├── install.sh                # Install CLIs from npm/PyPI (end users)
@@ -52,19 +51,6 @@ scripts/
 │           ├── index.ts
 │           └── index.spec.ts
 │
-├── e3/                           # E3 CLI wrappers (with Docker fallback)
-│   ├── init.sh                   # → commands/e3-init.md
-│   ├── start.sh                  # → commands/e3-start.md
-│   ├── run.sh                    # → commands/e3-run.md
-│   ├── watch.sh                  # → commands/e3-watch.md
-│   ├── status.sh                 # → commands/e3-status.md
-│   ├── logs.sh                   # → commands/e3-logs.md
-│   ├── get.sh                    # → commands/e3-get.md
-│   └── set.sh                    # → commands/e3-set.md
-│
-└── east/                         # East CLI wrappers (with Docker fallback)
-    └── compile.sh                # → commands/compile.md
-
 docker/                           # DOCKER SCOPE: Container images
 ├── Dockerfile.e3                 # Full e3 image (Node + Python)
 ├── Dockerfile.east-node          # East-node only image
@@ -72,20 +58,6 @@ docker/                           # DOCKER SCOPE: Container images
 ├── install-packages.sh           # Called by Dockerfiles during build
 └── test-install.sh               # Test install scripts in fresh container
 ```
-
-## Command → Script Mapping
-
-| Command | Script | Docker Fallback |
-|---------|--------|-----------------|
-| `/e3-init` | `scripts/e3/init.sh` | `ghcr.io/elaraai/e3` |
-| `/e3-start` | `scripts/e3/start.sh` | `ghcr.io/elaraai/e3` |
-| `/e3-run` | `scripts/e3/run.sh` | `ghcr.io/elaraai/e3` |
-| `/e3-watch` | `scripts/e3/watch.sh` | `ghcr.io/elaraai/e3` |
-| `/e3-status` | `scripts/e3/status.sh` | `ghcr.io/elaraai/e3` |
-| `/e3-logs` | `scripts/e3/logs.sh` | `ghcr.io/elaraai/e3` |
-| `/e3-get` | `scripts/e3/get.sh` | `ghcr.io/elaraai/e3` |
-| `/e3-set` | `scripts/e3/set.sh` | `ghcr.io/elaraai/e3` |
-| `/compile` | `scripts/east/compile.sh` | `ghcr.io/elaraai/east-node` |
 
 ## Generated Project Structure
 
@@ -199,52 +171,6 @@ source_nvm() {
 }
 
 has_command() { command -v "$1" &> /dev/null; }
-```
-
-### `lib/docker-fallback.sh`
-
-```bash
-#!/usr/bin/env bash
-
-run_cli() {
-    local cli="$1" image="$2"; shift 2
-    if command -v "$cli" &> /dev/null; then
-        "$cli" "$@"
-    elif command -v docker &> /dev/null; then
-        docker run --rm -v "$(pwd):/workspace" -v "${HOME}/.e3:/root/.e3" -w /workspace "$image" "$cli" "$@"
-    else
-        echo "Error: Neither '$cli' nor Docker installed." >&2; exit 1
-    fi
-}
-
-run_cli_interactive() {
-    local cli="$1" image="$2"; shift 2
-    if command -v "$cli" &> /dev/null; then
-        "$cli" "$@"
-    elif command -v docker &> /dev/null; then
-        docker run --rm -it -v "$(pwd):/workspace" -v "${HOME}/.e3:/root/.e3" -w /workspace "$image" "$cli" "$@"
-    else
-        echo "Error: Neither '$cli' nor Docker installed." >&2; exit 1
-    fi
-}
-```
-
-## E3 Wrapper Scripts
-
-Each becomes a 3-liner:
-
-```bash
-#!/usr/bin/env bash
-source "$(dirname "$0")/../lib/docker-fallback.sh"
-run_cli e3 ghcr.io/elaraai/e3 start "$@"
-```
-
-## Command Files
-
-Update paths in `commands/*.md`:
-
-```markdown
-allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/e3/start.sh)"]
 ```
 
 ## Template Files
