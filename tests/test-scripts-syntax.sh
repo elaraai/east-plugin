@@ -9,16 +9,6 @@ echo "=== Testing script syntax ==="
 
 SCRIPTS=(
     scripts/lib/common.sh
-    scripts/lib/docker-fallback.sh
-    scripts/e3/init.sh
-    scripts/e3/start.sh
-    scripts/e3/run.sh
-    scripts/e3/watch.sh
-    scripts/e3/status.sh
-    scripts/e3/logs.sh
-    scripts/e3/get.sh
-    scripts/e3/set.sh
-    scripts/east/compile.sh
     scripts/global/install.sh
     scripts/global/install-dev.sh
     scripts/global/update.sh

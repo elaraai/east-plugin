@@ -48,7 +48,7 @@ fi
 
 # Configuration
 EAST_DIR="${EAST_DIR:-$HOME/east}"
-REPOS=(east east-node east-py east-ui e3)
+REPOS=(east east-c east-node east-py east-ui e3)
 NODE_VERSION="22"
 
 echo ""
@@ -167,8 +167,16 @@ check_dependencies() {
         missing+=("make")
     fi
 
+    if ! command -v cmake &> /dev/null; then
+        missing+=("cmake")
+    fi
+
+    if ! command -v gcc &> /dev/null; then
+        missing+=("gcc")
+    fi
+
     if [ ${#missing[@]} -eq 0 ]; then
-        log_success "All required dependencies found (curl, git, make)"
+        log_success "All required dependencies found (curl, git, make, cmake, gcc)"
         return 0
     fi
 
@@ -238,6 +246,9 @@ main() {
     # east first (no deps)
     build_repo "east"
 
+    # east-c (no deps, C runtime)
+    build_repo "east-c"
+
     # east-node depends on east
     build_repo "east-node"
 
@@ -276,6 +287,11 @@ main() {
         log_success "east-py CLI installed"
     fi
 
+    cd "$EAST_DIR/east-c"
+    if make install-cli 2>/dev/null; then
+        log_success "east-c CLI installed"
+    fi
+
     # Done
     echo ""
     echo "=========================================="
@@ -286,6 +302,7 @@ main() {
     echo ""
     echo "Available commands:"
     echo "  east-node   - East Node.js CLI"
+    echo "  east-c      - East C CLI"
     echo "  e3          - East Execution Engine CLI"
     echo "  east-py     - East Python CLI"
     echo ""

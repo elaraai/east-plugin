@@ -69,7 +69,7 @@ if [ "$INSTALL_PYTHON" = true ]; then
             "llvmlite>=0.41.0" \
             "east-py @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py" \
             "east-py-std @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-std" \
-            "east-py-io @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-io" \
+            "east-py-io[all] @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-io" \
             "east-py-datascience[all] @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-datascience" \
             "east-py-cli @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-cli"
     else
@@ -82,6 +82,7 @@ if [ "$VERIFY" = true ]; then
     echo "Verifying installations..."
     npx @elaraai/east-node-cli --version || echo "east-node-cli installed"
     e3 --version || echo "e3-cli installed"
+    east-c --version 2>/dev/null || echo "east-c-cli not installed (built separately)"
     if [ "$INSTALL_PYTHON" = true ] && command -v python3 &> /dev/null; then
         python3 -c "import east; print('east-py installed')" || true
     fi
