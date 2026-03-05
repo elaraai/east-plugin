@@ -60,6 +60,7 @@ echo "  - @elaraai/east-node-cli (East Node.js CLI)"
 echo "  - @elaraai/e3-cli (East Execution Engine CLI)"
 echo "  - uv (Python package manager)"
 echo "  - east-py (East Python CLI)"
+echo "  - east-c (East C CLI, built from source)"
 echo ""
 
 if ! confirm "Continue?"; then
@@ -140,6 +141,24 @@ install_python_cli() {
     log_success "east-py CLI installed"
 }
 
+# Install east-c CLI (built from source)
+install_east_c() {
+    log_info "Installing east-c CLI (building from source)..."
+
+    local tmpdir
+    tmpdir=$(mktemp -d)
+
+    git clone --depth 1 https://github.com/elaraai/east-c.git "$tmpdir/east-c"
+    cd "$tmpdir/east-c"
+    make build
+    make install-cli
+
+    cd /
+    rm -rf "$tmpdir"
+
+    log_success "east-c CLI installed"
+}
+
 # Verify installation
 verify_installation() {
     echo ""
@@ -167,6 +186,13 @@ verify_installation() {
         log_success "east-py: $(east-py --version 2>/dev/null || echo 'installed')"
     else
         log_warn "east-py not found in PATH"
+        all_good=false
+    fi
+
+    if command -v east-c &> /dev/null; then
+        log_success "east-c: $(east-c version 2>/dev/null || echo 'installed')"
+    else
+        log_warn "east-c not found in PATH"
         all_good=false
     fi
 
@@ -198,6 +224,7 @@ print_shell_config() {
     echo ""
     echo "Available commands:"
     echo "  east-node --help   East Node.js CLI"
+    echo "  east-c --help      East C CLI"
     echo "  e3 --help          East Execution Engine"
     echo "  east-py --help     East Python CLI"
     echo ""
@@ -236,8 +263,16 @@ check_dependencies() {
         missing+=("git")
     fi
 
+    if ! command -v cmake &> /dev/null; then
+        missing+=("cmake")
+    fi
+
+    if ! command -v gcc &> /dev/null; then
+        missing+=("gcc")
+    fi
+
     if [ ${#missing[@]} -eq 0 ]; then
-        log_success "All required dependencies found (curl, git)"
+        log_success "All required dependencies found (curl, git, cmake, gcc)"
         return 0
     fi
 
@@ -292,6 +327,9 @@ main() {
     # Install uv and Python CLI
     install_uv
     install_python_cli || log_warn "Python CLI installation failed (optional)"
+
+    # Install east-c CLI (built from source)
+    install_east_c || log_warn "east-c CLI installation failed (optional)"
 
     # Verify and print instructions
     if verify_installation; then

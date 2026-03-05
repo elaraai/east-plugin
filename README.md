@@ -181,8 +181,8 @@ curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/gl
 
 | Script | What it does | Requirements |
 |--------|--------------|--------------|
-| `scripts/global/install.sh` | Installs CLIs globally from npm/PyPI | `curl`, `git` |
-| `scripts/global/install-dev.sh` | Clones all repos to `~/east`, builds and tests them | `curl`, `git`, `make` |
+| `scripts/global/install.sh` | Installs CLIs globally from npm/PyPI, builds east-c from source | `curl`, `git`, `cmake`, `gcc` |
+| `scripts/global/install-dev.sh` | Clones all repos to `~/east`, builds and tests them | `curl`, `git`, `make`, `cmake`, `gcc` |
 | `scripts/global/update.sh` | Updates CLIs to latest versions | `npm` |
 | `scripts/global/update-dev.sh` | Pulls latest and rebuilds all repos | `git`, `make` |
 
@@ -198,6 +198,7 @@ curl -fsSL https://raw.githubusercontent.com/elaraai/east-plugin/main/scripts/gl
 
 Both install scripts install:
 - `east-node` - East Node.js CLI
+- `east-c` - East C CLI (built from source)
 - `e3` - East Execution Engine CLI
 - `east-py` - East Python CLI
 
@@ -210,7 +211,7 @@ Pre-built Docker images provide a consistent execution environment without needi
 | Image | License | Contents |
 |-------|---------|----------|
 | `ghcr.io/elaraai/east-node` | AGPL-3.0 | Node.js 22 + East + east-node-std/io + east-ui |
-| `ghcr.io/elaraai/e3` | BSL + AGPL | Everything in east-node + Python 3.11 + east-py + e3 |
+| `ghcr.io/elaraai/e3` | BSL + AGPL | Everything in east-node + Python 3.11 + east-py + east-c + e3 |
 
 ### Usage
 
@@ -269,6 +270,7 @@ Individual test scripts:
 - [East Language](https://github.com/elaraai/east)
 - [East Node](https://github.com/elaraai/east-node)
 - [East Python](https://github.com/elaraai/east-py)
+- [East C](https://github.com/elaraai/east-c)
 - [East UI](https://github.com/elaraai/east-ui)
 - [e3 Execution Engine](https://github.com/elaraai/e3)
 - [Elara AI](https://elaraai.com/)

@@ -54,6 +54,19 @@ else
     log_warn "uv not found, skipping Python CLI update"
 fi
 
+# Update east-c CLI (rebuild from source)
+if command -v east-c &> /dev/null && command -v cmake &> /dev/null; then
+    log_info "Updating east-c CLI (rebuilding from source)..."
+    tmpdir=$(mktemp -d)
+    git clone --depth 1 https://github.com/elaraai/east-c.git "$tmpdir/east-c" && \
+        cd "$tmpdir/east-c" && make build && make install-cli && \
+        log_success "east-c updated" || log_warn "Failed to update east-c"
+    cd /
+    rm -rf "$tmpdir"
+else
+    log_warn "east-c or cmake not found, skipping east-c update"
+fi
+
 # Show versions
 echo ""
 log_info "Current versions:"
@@ -69,6 +82,10 @@ fi
 
 if command -v east-py &> /dev/null; then
     echo "  east-py: $(east-py --version 2>/dev/null || echo 'unknown')"
+fi
+
+if command -v east-c &> /dev/null; then
+    echo "  east-c: $(east-c version 2>/dev/null || echo 'unknown')"
 fi
 
 echo ""
