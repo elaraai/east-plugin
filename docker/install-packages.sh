@@ -69,7 +69,7 @@ if [ "$INSTALL_PYTHON" = true ]; then
             "llvmlite>=0.41.0" \
             "east-py @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py" \
             "east-py-std @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-std" \
-            "east-py-io @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-io" \
+            "east-py-io[all] @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-io" \
             "east-py-datascience[all] @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-datascience" \
             "east-py-cli @ git+https://github.com/elaraai/east-py@main#subdirectory=packages/east-py-cli"
     else
