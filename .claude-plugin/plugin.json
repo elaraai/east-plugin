@@ -9,9 +9,7 @@
   },
   "homepage": "https://github.com/elaraai/east",
   "repository": "https://github.com/elaraai/east-plugin",
-  "hooks": [
-    "./hooks/hooks.json"
-  ],
+  "hooks": [],
   "license": "AGPL-3.0",
   "keywords": [
     "east",
