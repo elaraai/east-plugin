@@ -75,7 +75,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate search index
+      - name: Generate search index and bundle
         run: npm run generate-index -- --base-dir .sources
 
       - name: Clean up source repos

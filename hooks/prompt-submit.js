@@ -4,7 +4,8 @@ import { fileURLToPath } from "node:url";
 import { buildSearchIndex, formatResults, MIN_SCORE } from "../lib/search.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const INDEX_PATH = join(__dirname, "..", "index.json");
+// Two levels up from dist/hooks/ to project root
+const INDEX_PATH = join(__dirname, "..", "..", "index.json");
 
 // Package name to skill name mapping
 const PACKAGE_SKILL_MAP = {

@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "generate-index": "npm run build && node dist/scripts/generate-index.js"
+    "bundle": "esbuild hooks/prompt-submit.js hooks/session-start.js mcp/search-server.js --bundle --format=esm --platform=node --outdir=dist --preserve-symlinks",
+    "generate-index": "npm run build && node dist/scripts/generate-index.js && npm run bundle"
   },
   "engines": {
     "node": ">=22.0.0"
@@ -16,6 +17,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.18.1",
+    "esbuild": "^0.27.3",
     "typescript": "~5.9.2"
   }
 }
