@@ -86,14 +86,22 @@ jobs:
           git checkout -b "$BRANCH_NAME"
           git add .claude-plugin/plugin.json
           git commit -m "chore: bump version to v${{ env.new_version }}"
-          git push -u "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/elaraai/east-plugin.git" "$BRANCH_NAME"
+          git push -u --force "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/elaraai/east-plugin.git" "$BRANCH_NAME"
           echo "branch_name=${BRANCH_NAME}" >> $GITHUB_ENV
 
       - name: Create Pull Request
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          gh pr create \
-            --title "chore: bump version to v${{ env.new_version }}" \
-            --body "Bump plugin version to v${{ env.new_version }} (${{ inputs.version_type }} release)" \
-            --head "${{ env.branch_name }}"
+          EXISTING_PR=$(gh pr list --head "${{ env.branch_name }}" --json number --jq '.[0].number' 2>/dev/null || echo "")
+
+          PR_TITLE="chore: bump version to v${{ env.new_version }}"
+          PR_BODY="Bump plugin version to v${{ env.new_version }} (${{ inputs.version_type }} release)"
+
+          if [[ -n "$EXISTING_PR" ]]; then
+            echo "Updating existing PR #${EXISTING_PR}"
+            gh pr edit "$EXISTING_PR" --title "$PR_TITLE" --body "$PR_BODY"
+          else
+            echo "Creating new PR"
+            gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head "${{ env.branch_name }}"
+          fi
