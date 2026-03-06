@@ -61,6 +61,7 @@ create_project() {
     "@elaraai/east": "beta",
     "@elaraai/east-node-std": "beta",
     "@elaraai/east-node-io": "beta",
+    "@elaraai/east-py-datascience": "beta",
     "@elaraai/e3": "beta",
     "@elaraai/e3-types": "beta"
   },
