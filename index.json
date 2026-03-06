@@ -1,11 +1,12 @@
 {
   "version": 1,
-  "generated": "2026-03-06T13:05:11.547Z",
+  "generated": "2026-03-06T13:27:36.572Z",
   "stats": {
-    "totalEntries": 576,
-    "totalFiles": 17,
+    "totalEntries": 601,
+    "totalFiles": 19,
     "packages": {
-      "east": 576
+      "east": 594,
+      "e3": 7
     }
   },
   "entries": [
@@ -4683,6 +4684,158 @@
       "source": "// Check dict inequality with notEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Map([[1n, \"a\"], [2n, \"b\"]]), DictType(IntegerType, StringType));\n        return d.notEqual(new Map([[1n, \"a\"]]));\n    })"
     },
     {
+      "id": "east:east.examples.ts:eastValue",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/east.examples.ts",
+      "suite": "East.value()",
+      "test": "Create an East value from a JavaScript literal",
+      "keywords": [
+        "East",
+        "value",
+        "create",
+        "literal"
+      ],
+      "imports": [
+        "import { East, IntegerType, StringType, BooleanType, ArrayType, StructType, OptionType, some, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Create an East value from a JavaScript literal\n// inputs: []  returns: 42n\nEast.function([], IntegerType, ($) => {\n        return East.value(42n);\n    })"
+    },
+    {
+      "id": "east:east.examples.ts:eastValueWithType",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/east.examples.ts",
+      "suite": "East.value()",
+      "test": "Create an East value with an explicit type annotation",
+      "keywords": [
+        "East",
+        "value",
+        "type",
+        "typed",
+        "variant"
+      ],
+      "imports": [
+        "import { East, IntegerType, StringType, BooleanType, ArrayType, StructType, OptionType, some, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Create an East value with an explicit type annotation\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const v = East.value(some(5n), OptionType(IntegerType));\n        return East.equal(v, some(5n));\n    })"
+    },
+    {
+      "id": "east:east.examples.ts:eastFunction",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/east.examples.ts",
+      "suite": "East.function()",
+      "test": "Define and call an East function with arguments",
+      "keywords": [
+        "East",
+        "function",
+        "call",
+        "define"
+      ],
+      "imports": [
+        "import { East, IntegerType, StringType, BooleanType, ArrayType, StructType, OptionType, some, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Define and call an East function with arguments\n// inputs: []  returns: 15n\nEast.function([], IntegerType, ($) => {\n        const add = East.function([IntegerType, IntegerType], IntegerType, ($, x, y) => {\n            return x.add(y);\n        });\n        return add(5n, 10n);\n    })"
+    },
+    {
+      "id": "east:east.examples.ts:eastStr",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/east.examples.ts",
+      "suite": "East.str",
+      "test": "Build a string using East.str template literal interpolation",
+      "keywords": [
+        "East",
+        "str",
+        "string",
+        "interpolation",
+        "template"
+      ],
+      "imports": [
+        "import { East, IntegerType, StringType, BooleanType, ArrayType, StructType, OptionType, some, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Build a string using East.str template literal interpolation\n// inputs: []  returns: \"The answer is 42\"\nEast.function([], StringType, ($) => {\n        const x = $.const(42n, IntegerType);\n        return East.str`The answer is ${x}`;\n    })"
+    },
+    {
+      "id": "east:east.examples.ts:eastStrMultiple",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/east.examples.ts",
+      "suite": "East.str",
+      "test": "Interpolate multiple values into a string template",
+      "keywords": [
+        "East",
+        "str",
+        "string",
+        "interpolation",
+        "multiple"
+      ],
+      "imports": [
+        "import { East, IntegerType, StringType, BooleanType, ArrayType, StructType, OptionType, some, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Interpolate multiple values into a string template\n// inputs: []  returns: \"5 + 10 = 15\"\nEast.function([], StringType, ($) => {\n        const x = $.const(5n, IntegerType);\n        const y = $.const(10n, IntegerType);\n        return East.str`${x} + ${y} = ${x.add(y)}`;\n    })"
+    },
+    {
+      "id": "east:east.examples.ts:eastIsIdentity",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/east.examples.ts",
+      "suite": "East.is() — identity semantics for mutable types",
+      "test": "East.is() returns false for distinct mutable objects with same values",
+      "keywords": [
+        "East",
+        "is",
+        "identity",
+        "mutable",
+        "array",
+        "reference"
+      ],
+      "imports": [
+        "import { East, IntegerType, StringType, BooleanType, ArrayType, StructType, OptionType, some, example } from \"@elaraai/east\";"
+      ],
+      "source": "// East.is() returns false for distinct mutable objects with same values\n// inputs: []  returns: false\nEast.function([], BooleanType, ($) => {\n        const a = $.let([1n, 2n, 3n], ArrayType(IntegerType));\n        const b = $.let([1n, 2n, 3n], ArrayType(IntegerType));\n        return East.is(a, b);\n    })"
+    },
+    {
+      "id": "east:east.examples.ts:eastPrintVariant",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/east.examples.ts",
+      "suite": "East.print() — variant and alias printing (unique to east.spec)",
+      "test": "Print a variant value as a string",
+      "keywords": [
+        "East",
+        "print",
+        "variant",
+        "display",
+        "option"
+      ],
+      "imports": [
+        "import { East, IntegerType, StringType, BooleanType, ArrayType, StructType, OptionType, some, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Print a variant value as a string\n// inputs: []  returns: \".some 42\"\nEast.function([], StringType, ($) => {\n        const v = $.const(some(42n), OptionType(IntegerType));\n        return East.print(v);\n    })"
+    },
+    {
+      "id": "east:east.examples.ts:eastPrintAlias",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/east.examples.ts",
+      "suite": "East.print() — variant and alias printing (unique to east.spec)",
+      "test": "Print shared mutable references with alias notation",
+      "keywords": [
+        "East",
+        "print",
+        "alias",
+        "shared",
+        "reference",
+        "mutable"
+      ],
+      "imports": [
+        "import { East, IntegerType, StringType, BooleanType, ArrayType, StructType, OptionType, some, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Print shared mutable references with alias notation\n// inputs: []  returns: \"(a=[1, 2, 3], b=1#.a)\"\nEast.function([], StringType, ($) => {\n        const shared = $.let([1n, 2n, 3n], ArrayType(IntegerType));\n        const s = $.let({ a: shared, b: shared }, StructType({ a: ArrayType(IntegerType), b: ArrayType(IntegerType) }));\n        return East.print(s);\n    })"
+    },
+    {
       "id": "east:float.examples.ts:floatNegate",
       "skill": "east",
       "package": "east",
@@ -8552,6 +8705,197 @@
       "source": "// End-to-end: diff, compose, apply, invert, and restore original\n// inputs: []  returns: 10n\nEast.function([], IntegerType, ($) => {\n        const v1 = $.const(10n, IntegerType);\n        const v2 = $.const(20n, IntegerType);\n        const v3 = $.const(30n, IntegerType);\n        const p1 = $.const(East.diff(v1, v2));\n        const p2 = $.const(East.diff(v2, v3));\n        const composed = $.const(East.composePatch(p1, p2, IntegerType));\n        const inverted = $.const(East.invertPatch(composed, IntegerType));\n        return East.applyPatch(v3, inverted);\n    })"
     },
     {
+      "id": "east:recursive.examples.ts:recursiveEqual",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/recursive.examples.ts",
+      "suite": "Construct and Compare",
+      "test": "Check equality of two recursive linked list values",
+      "keywords": [
+        "recursive",
+        "RecursiveType",
+        "equal",
+        "equality",
+        "comparison"
+      ],
+      "imports": [
+        "import { East, BooleanType, VariantType, NullType, RecursiveType, variant, StructType, StringType, ArrayType, DictType, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Check equality of two recursive linked list values\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const list1 = $.const(variant(\"cons\", { head: true, tail: variant(\"nil\") }), LinkedListType);\n        const list1b = $.const(variant(\"cons\", { head: true, tail: variant(\"nil\") }), LinkedListType);\n        return East.equal(list1, list1b);\n    })"
+    },
+    {
+      "id": "east:recursive.examples.ts:recursiveNotEqual",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/recursive.examples.ts",
+      "suite": "Construct and Compare",
+      "test": "Check inequality of two different recursive values",
+      "keywords": [
+        "recursive",
+        "RecursiveType",
+        "notEqual",
+        "inequality",
+        "comparison"
+      ],
+      "imports": [
+        "import { East, BooleanType, VariantType, NullType, RecursiveType, variant, StructType, StringType, ArrayType, DictType, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Check inequality of two different recursive values\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const list0 = $.const(variant(\"nil\"), LinkedListType);\n        const list1 = $.const(variant(\"cons\", { head: true, tail: variant(\"nil\") }), LinkedListType);\n        return East.notEqual(list0, list1);\n    })"
+    },
+    {
+      "id": "east:recursive.examples.ts:recursiveLess",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/recursive.examples.ts",
+      "suite": "Construct and Compare",
+      "test": "Check ordering of recursive values",
+      "keywords": [
+        "recursive",
+        "RecursiveType",
+        "less",
+        "ordering",
+        "comparison"
+      ],
+      "imports": [
+        "import { East, BooleanType, VariantType, NullType, RecursiveType, variant, StructType, StringType, ArrayType, DictType, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Check ordering of recursive values\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const list0 = $.const(variant(\"nil\"), LinkedListType);\n        const list1 = $.const(variant(\"cons\", { head: true, tail: variant(\"nil\") }), LinkedListType);\n        // \"cons\" < \"nil\" in variant ordering\n        return East.less(list1, list0);\n    })"
+    },
+    {
+      "id": "east:recursive.examples.ts:recursiveGreater",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/recursive.examples.ts",
+      "suite": "Construct and Compare",
+      "test": "Check greater-than ordering of recursive values",
+      "keywords": [
+        "recursive",
+        "RecursiveType",
+        "greater",
+        "ordering",
+        "comparison"
+      ],
+      "imports": [
+        "import { East, BooleanType, VariantType, NullType, RecursiveType, variant, StructType, StringType, ArrayType, DictType, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Check greater-than ordering of recursive values\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const list0 = $.const(variant(\"nil\"), LinkedListType);\n        const list1 = $.const(variant(\"cons\", { head: true, tail: variant(\"nil\") }), LinkedListType);\n        return East.greater(list0, list1);\n    })"
+    },
+    {
+      "id": "east:recursive.examples.ts:recursiveLessEqual",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/recursive.examples.ts",
+      "suite": "Construct and Compare",
+      "test": "Check less-than-or-equal ordering of recursive values",
+      "keywords": [
+        "recursive",
+        "RecursiveType",
+        "lessEqual",
+        "ordering",
+        "comparison"
+      ],
+      "imports": [
+        "import { East, BooleanType, VariantType, NullType, RecursiveType, variant, StructType, StringType, ArrayType, DictType, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Check less-than-or-equal ordering of recursive values\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const list1 = $.const(variant(\"cons\", { head: true, tail: variant(\"nil\") }), LinkedListType);\n        const list1b = $.const(variant(\"cons\", { head: true, tail: variant(\"nil\") }), LinkedListType);\n        return East.lessEqual(list1, list1b);\n    })"
+    },
+    {
+      "id": "east:recursive.examples.ts:recursiveGreaterEqual",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/recursive.examples.ts",
+      "suite": "Construct and Compare",
+      "test": "Check greater-than-or-equal ordering of recursive values",
+      "keywords": [
+        "recursive",
+        "RecursiveType",
+        "greaterEqual",
+        "ordering",
+        "comparison"
+      ],
+      "imports": [
+        "import { East, BooleanType, VariantType, NullType, RecursiveType, variant, StructType, StringType, ArrayType, DictType, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Check greater-than-or-equal ordering of recursive values\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const list0 = $.const(variant(\"nil\"), LinkedListType);\n        const list1 = $.const(variant(\"cons\", { head: true, tail: variant(\"nil\") }), LinkedListType);\n        return East.greaterEqual(list0, list1);\n    })"
+    },
+    {
+      "id": "east:recursive.examples.ts:recursiveUnwrap",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/recursive.examples.ts",
+      "suite": "Unwrapping",
+      "test": "Unwrap a recursive value to access inner fields",
+      "keywords": [
+        "recursive",
+        "RecursiveType",
+        "unwrap",
+        "access",
+        "dereference"
+      ],
+      "imports": [
+        "import { East, BooleanType, VariantType, NullType, RecursiveType, variant, StructType, StringType, ArrayType, DictType, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Unwrap a recursive value to access inner fields\n// inputs: []  returns: false\nEast.function([], BooleanType, ($) => {\n        const list2 = $.const(variant(\"cons\", { head: false, tail: variant(\"cons\", { head: true, tail: variant(\"nil\") }) }), LinkedListType);\n        return list2.unwrap().unwrap(\"cons\").head;\n    })"
+    },
+    {
+      "id": "east:recursive.examples.ts:recursivePrint",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/recursive.examples.ts",
+      "suite": "Printing and Parsing",
+      "test": "Print a recursive linked list as a string",
+      "keywords": [
+        "recursive",
+        "RecursiveType",
+        "print",
+        "display",
+        "serialize"
+      ],
+      "imports": [
+        "import { East, BooleanType, VariantType, NullType, RecursiveType, variant, StructType, StringType, ArrayType, DictType, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Print a recursive linked list as a string\n// inputs: []  returns: \".cons (head=true, tail=.nil)\"\nEast.function([], StringType, ($) => {\n        const list1 = $.const(variant(\"cons\", { head: true, tail: variant(\"nil\") }), LinkedListType);\n        return East.print(list1);\n    })"
+    },
+    {
+      "id": "east:recursive.examples.ts:recursiveParse",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/recursive.examples.ts",
+      "suite": "Printing and Parsing",
+      "test": "Parse a string into a recursive linked list value",
+      "keywords": [
+        "recursive",
+        "RecursiveType",
+        "parse",
+        "deserialize",
+        "text"
+      ],
+      "imports": [
+        "import { East, BooleanType, VariantType, NullType, RecursiveType, variant, StructType, StringType, ArrayType, DictType, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Parse a string into a recursive linked list value\n// inputs: []  returns: variant(\"cons\", { head: true, tail: variant(\"nil\", null) })\nEast.function([], LinkedListType, ($) => {\n        const s = $.const(\".cons (head=true, tail=.nil)\", StringType);\n        return s.parse(LinkedListType);\n    })"
+    },
+    {
+      "id": "east:recursive.examples.ts:recursiveStructBased",
+      "skill": "east",
+      "package": "east",
+      "file": "east/test/recursive.examples.ts",
+      "suite": "Struct-based recursive type",
+      "test": "Create a struct-based recursive type (like an XML node)",
+      "keywords": [
+        "recursive",
+        "RecursiveType",
+        "struct",
+        "StructType",
+        "tree",
+        "XML"
+      ],
+      "imports": [
+        "import { East, BooleanType, VariantType, NullType, RecursiveType, variant, StructType, StringType, ArrayType, DictType, example } from \"@elaraai/east\";"
+      ],
+      "source": "// Create a struct-based recursive type (like an XML node)\n// inputs: []  returns: \"div\"\nEast.function([], StringType, ($) => {\n        const XmlNodeType = RecursiveType(self => StructType({\n            tag: StringType,\n            attributes: DictType(StringType, StringType),\n            children: ArrayType(VariantType({\n                TEXT: StringType,\n                ELEMENT: self\n            }))\n        }));\n        const node = $.const({\n            tag: \"div\",\n            attributes: new Map([[\"class\", \"container\"]]),\n            children: [variant(\"TEXT\", \"Hello world\")],\n        }, XmlNodeType);\n        return node.unwrap().tag;\n    })"
+    },
+    {
       "id": "east:ref.examples.ts:refGet",
       "skill": "east",
       "package": "east",
@@ -11065,6 +11409,153 @@
         "import { East, ArrayType, FloatType, IntegerType, VectorType, example } from \"@elaraai/east\";"
       ],
       "source": "// Reduce a vector to a single value with an accumulator\n// inputs: []  returns: 10.0\nEast.function([], FloatType, ($) => {\n        const v = $.let(East.Vector.fromArray([1.0, 2.0, 3.0, 4.0]));\n        return v.reduce(($, acc, val) => acc.add(val), 0.0);\n    })"
+    },
+    {
+      "id": "e3:static:input-basic",
+      "skill": "e3",
+      "package": "e3",
+      "file": "static",
+      "suite": "e3.input",
+      "test": "Define an input dataset with a default value",
+      "keywords": [
+        "e3",
+        "input",
+        "dataset",
+        "default",
+        "StringType",
+        "IntegerType"
+      ],
+      "imports": [
+        "import { East, StringType, IntegerType } from '@elaraai/east';",
+        "import e3 from '@elaraai/e3';"
+      ],
+      "source": "// Define an input with a default value\nconst name = e3.input('name', StringType, 'default');\nconst count = e3.input('count', IntegerType);"
+    },
+    {
+      "id": "e3:static:task-basic",
+      "skill": "e3",
+      "package": "e3",
+      "file": "static",
+      "suite": "e3.task",
+      "test": "Define a task that runs an East function",
+      "keywords": [
+        "e3",
+        "task",
+        "function",
+        "dataflow",
+        "dependency"
+      ],
+      "imports": [
+        "import { East, StringType } from '@elaraai/east';",
+        "import e3 from '@elaraai/e3';"
+      ],
+      "source": "// Define a task that runs an East function\nconst name = e3.input('name', StringType, 'World');\n\nconst greet = e3.task(\n  'greet',\n  [name],\n  East.function([StringType], StringType, ($, n) =>\n    East.str`Hello, ${n}!`\n  )\n);"
+    },
+    {
+      "id": "e3:static:task-chain",
+      "skill": "e3",
+      "package": "e3",
+      "file": "static",
+      "suite": "e3.task",
+      "test": "Chain tasks via .output",
+      "keywords": [
+        "e3",
+        "task",
+        "chain",
+        "output",
+        "dependency",
+        "pipeline"
+      ],
+      "imports": [
+        "import { East, StringType } from '@elaraai/east';",
+        "import e3 from '@elaraai/e3';"
+      ],
+      "source": "// Chain tasks via .output\nconst greet = e3.task(\n  'greet',\n  [name],\n  East.function([StringType], StringType, ($, n) =>\n    East.str`Hello, ${n}!`\n  )\n);\n\nconst shout = e3.task(\n  'shout',\n  [greet.output],\n  East.function([StringType], StringType, ($, s) => s.toUpperCase())\n);"
+    },
+    {
+      "id": "e3:static:task-python-runner",
+      "skill": "e3",
+      "package": "e3",
+      "file": "static",
+      "suite": "e3.task",
+      "test": "Define a task with a custom Python runner",
+      "keywords": [
+        "e3",
+        "task",
+        "runner",
+        "python",
+        "uv",
+        "east-py"
+      ],
+      "imports": [
+        "import { East, IntegerType } from '@elaraai/east';",
+        "import e3 from '@elaraai/e3';"
+      ],
+      "source": "// Define a task with a custom Python runner\nconst pyTask = e3.task(\n  'py_task',\n  [input],\n  East.function([IntegerType], IntegerType, ($, x) => x.multiply(2n)),\n  { runner: ['uv', 'run', 'east-py', 'run', '-p', 'east-py-std'] }\n);"
+    },
+    {
+      "id": "e3:static:custom-task",
+      "skill": "e3",
+      "package": "e3",
+      "file": "static",
+      "suite": "e3.customTask",
+      "test": "Define a task that runs a shell command",
+      "keywords": [
+        "e3",
+        "customTask",
+        "shell",
+        "command",
+        "script",
+        "process"
+      ],
+      "imports": [
+        "import { East, StringType } from '@elaraai/east';",
+        "import e3 from '@elaraai/e3';"
+      ],
+      "source": "// Define a task that runs a shell command\nconst process = e3.customTask(\n  'process',\n  [rawData],\n  StringType,\n  ($, input_paths, output_path) =>\n    East.str`python script.py -i ${input_paths.get(0n)} -o ${output_path}`\n);"
+    },
+    {
+      "id": "e3:static:package-export",
+      "skill": "e3",
+      "package": "e3",
+      "file": "static",
+      "suite": "e3.package",
+      "test": "Bundle tasks into a package and export to zip",
+      "keywords": [
+        "e3",
+        "package",
+        "export",
+        "bundle",
+        "zip",
+        "deploy"
+      ],
+      "imports": [
+        "import e3 from '@elaraai/e3';"
+      ],
+      "source": "// Bundle tasks into a package and export to zip\nconst pkg = e3.package('myapp', '1.0.0', finalTask);\nawait e3.export(pkg, '/tmp/myapp.zip');\nexport default pkg;"
+    },
+    {
+      "id": "e3:static:full-example",
+      "skill": "e3",
+      "package": "e3",
+      "file": "static",
+      "suite": "e3 Quick Start",
+      "test": "Complete e3 package with input, task, package, and export",
+      "keywords": [
+        "e3",
+        "input",
+        "task",
+        "package",
+        "export",
+        "complete",
+        "example",
+        "hello world"
+      ],
+      "imports": [
+        "import { East, StringType } from '@elaraai/east';",
+        "import e3 from '@elaraai/e3';"
+      ],
+      "source": "// Complete e3 package with input, task, package, and export\nconst name = e3.input('name', StringType, 'World');\n\nconst greet = e3.task(\n  'greet',\n  [name],\n  East.function([StringType], StringType, ($, n) =>\n    East.str`Hello, ${n}!`\n  )\n);\n\nconst pkg = e3.package('hello', '1.0.0', greet);\nawait e3.export(pkg, '/tmp/hello.zip');\nexport default pkg;"
     }
   ]
 }

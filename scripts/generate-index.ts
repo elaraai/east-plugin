@@ -474,6 +474,17 @@ function main(): void {
         }
     }
 
+    // Merge static entries (e.g. hand-written e3 examples)
+    const staticPath = path.join(projectRoot, "index.static.json");
+    if (fs.existsSync(staticPath)) {
+        const staticData = JSON.parse(fs.readFileSync(staticPath, "utf-8")) as { entries: IndexEntry[] };
+        for (const entry of staticData.entries) {
+            entries.push(entry);
+            packageCounts[entry.package] = (packageCounts[entry.package] ?? 0) + 1;
+        }
+        console.log(`\n[static] Merged ${staticData.entries.length} entries from index.static.json`);
+    }
+
     // Build output
     const output: IndexOutput = {
         version: 1,
