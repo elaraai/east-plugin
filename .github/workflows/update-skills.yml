@@ -49,18 +49,10 @@ jobs:
             local dest="$2"
             echo "Copying $src -> skills/$dest/"
 
-            mkdir -p "skills/$dest/reference"
-
             if [ -f ".sources/$src/SKILL.md" ]; then
               cp ".sources/$src/SKILL.md" "skills/$dest/"
             else
               echo "  Warning: SKILL.md not found in $src"
-            fi
-
-            if [ -d ".sources/$src/reference" ]; then
-              cp ".sources/$src/reference/"* "skills/$dest/reference/" 2>/dev/null || true
-            else
-              echo "  Warning: reference/ not found in $src"
             fi
           }
 
@@ -79,6 +71,12 @@ jobs:
 
           # e3 -> skills/e3/
           copy_skill "e3" "e3"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate search index
+        run: npm run generate-index -- --base-dir .sources
 
       - name: Clean up source repos
         run: rm -rf .sources
@@ -142,7 +140,7 @@ jobs:
           PR_TITLE="docs: update skills from source repos (v${{ env.new_version }})"
           PR_BODY="## Skills Update (v${{ env.new_version }})
 
-          Synced SKILL.md and reference docs from source repositories:
+          Synced SKILL.md files and search index from source repositories:
           - east
           - east-node (east-node-std, east-node-io)
           - east-py (east-py-datascience)

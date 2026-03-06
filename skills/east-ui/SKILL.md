@@ -149,7 +149,3 @@ Stack.Root([...], {
 });
 ```
 
-## Reference Documentation
-
-- **[API Reference](./references/api.md)** - Complete component signatures and types
-- **[Examples](./references/examples.md)** - Working code examples by use case

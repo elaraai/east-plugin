@@ -129,11 +129,6 @@ Task → What do you need?
 | `LabelVectorType` | `ArrayType(IntegerType)` | Class labels as integers (e.g., `[0n, 1n, 0n, 2n]`) |
 | `ModelBlobType` | `BlobType` | Serialized model (opaque, pass to predict functions) |
 
-## Reference Documentation
-
-- **[API Reference](./reference/api.md)** - Complete function signatures, types, and config options
-- **[Examples](./reference/examples.md)** - Working code examples by use case
-
 ## Available Modules
 
 | Module | Import | Purpose |

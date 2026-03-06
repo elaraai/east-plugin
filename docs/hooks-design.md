@@ -319,275 +319,119 @@ This text is automatically added as context.
 
 ## Structured Reference Documentation
 
-### Problem with Current Structure
+### Implemented Solution: `*.examples.ts` Files with Structured `example()` Pattern
 
-The current `reference/api.md` and `reference/examples.md` files are **monolithic blobs** that don't index well:
+Instead of monolithic `reference/api.md` and `reference/examples.md` files (now removed), examples live as `*.examples.ts` files in each package's test directory. These are indexed by `scripts/generate-index.ts` alongside the existing `*.spec.ts` test files.
 
-| File | Lines | Problem |
-|------|-------|---------|
-| `east/reference/api.md` | 827 | Too large, sections blur together |
-| `east/reference/examples.md` | 804 | Hard to match specific topics |
-| `east-py-datascience/reference/examples.md` | 1677 | Way too large for good search |
+Each example uses a structured `example()` wrapper:
 
-When searching "how do I sum an array?", the entire Array section might match, but we can't easily extract just the relevant `.sum()` documentation.
+```typescript
+// east/test/array.examples.ts
+import { East, ArrayType, IntegerType, example } from "@elaraai/east";
 
-### Proposed Solution: Granular Files with YAML Frontmatter + Testable Examples
-
-Instead of monolithic files, use **smaller topic-focused files** with:
-1. Structured YAML frontmatter for indexing
-2. **Separate `.ts` example files** that can be compiled and tested
-
-```
-skills/east/
-├── SKILL.md                          # Overview (<500 lines)
-└── reference/
-    ├── types/
-    │   ├── primitives.md             # Integer, Float, String, Boolean, etc.
-    │   ├── primitives.example.ts     # Testable examples
-    │   ├── collections.md            # Array, Set, Dict, Ref
-    │   ├── collections.example.ts
-    │   └── ...
-    ├── functions/
-    │   ├── defining.md               # East.function, East.asyncFunction
-    │   ├── defining.example.ts
-    │   └── ...
-    ├── expressions/
-    │   ├── arithmetic.md
-    │   ├── arithmetic.example.ts
-    │   └── ...
-    └── examples/                     # Standalone runnable examples
-        ├── hello-world.ts
-        ├── sum-array.ts
-        ├── file-processing.ts
-        └── ...
+export const arraySum = example({
+    keywords: ["array", "ArrayType", "sum", "aggregation"],
+    description: "Sum all elements of an integer array",
+    fn: East.function([], IntegerType, ($) => {
+        const a = $.const([1n, 2n, 3n], ArrayType(IntegerType));
+        return a.sum();
+    }),
+    inputs: [],
+    returns: 6n,
+});
 ```
 
-**Benefits of `.ts` example files:**
+Examples are organized into sections with comment dividers:
 
-| Aspect | Markdown Code Blocks | Separate `.ts` Files |
-|--------|---------------------|----------------------|
+```typescript
+// ---------------------------------------------------------------------------
+// Component Extraction
+// ---------------------------------------------------------------------------
+
+export const datetimeGetYear = example({ ... });
+
+// ---------------------------------------------------------------------------
+// Duration Arithmetic (Add)
+// ---------------------------------------------------------------------------
+
+export const datetimeAddMilliseconds = example({ ... });
+```
+
+**Benefits over monolithic reference docs:**
+
+| Aspect | Monolithic `.md` | `*.examples.ts` |
+|--------|------------------|------------------|
 | **Syntax verification** | None | TypeScript compiler |
 | **Runtime verification** | None | Can run and test output |
-| **CI integration** | Cannot automate | `npm run test:examples` |
-| **IDE support** | Limited | Full IntelliSense |
-| **Import verification** | Cannot verify | Real imports checked |
-| **Version drift** | Examples can rot | Compilation catches issues |
-
-**Example file structure:**
-
-```typescript
-// reference/expressions/collections.example.ts
-import { East, IntegerType, ArrayType } from "@elaraai/east";
-
-// Example: Sum an array of integers
-export const sumArray = East.function(
-    [ArrayType(IntegerType)],
-    IntegerType,
-    ($, arr) => {
-        $.return(arr.sum());
-    }
-);
-
-// Example: Filter positive numbers
-export const filterPositive = East.function(
-    [ArrayType(IntegerType)],
-    ArrayType(IntegerType),
-    ($, arr) => {
-        $.return(arr.filter(x => x.gt(0n)));
-    }
-);
-```
-
-**Markdown references the examples:**
-
-```markdown
----
-title: Array Operations
-keywords: [array, ArrayType, sum, map, filter, reduce]
-summary: Operations for working with arrays
-examples: [collections.example.ts]
----
-
-## Array Operations
-
-### Aggregation
-
-| Method | Description |
-|--------|-------------|
-| `arr.sum()` | Sum all numeric elements |
-
-See [collections.example.ts](./collections.example.ts) for working examples.
-```
-
-**CI verification:**
-
-Example files are verified by TypeScript compilation. The build process will fail if any example has type errors or invalid imports.
-
-### YAML Frontmatter for Each File
-
-Each reference file includes structured metadata for indexing:
-
-```yaml
----
-title: Array Operations
-keywords:
-  - array
-  - ArrayType
-  - sum
-  - map
-  - filter
-  - reduce
-  - forEach
-  - length
-  - slice
-  - concat
-  - includes
-  - find
-  - sort
-related:
-  - types/collections
-  - expressions/control-flow
-summary: >
-  Operations for working with arrays including iteration (map, forEach),
-  transformation (filter, sort), aggregation (sum, reduce), and access
-  (slice, find, includes).
----
-
-## Array Operations
-
-Arrays (`ArrayType(T)`) support rich operations for processing collections.
-
-### Aggregation
-
-| Method | Signature | Description |
-|--------|-----------|-------------|
-| `sum()` | `arr.sum(): IntegerExpr \| FloatExpr` | Sum all numeric elements |
-| `reduce()` | `arr.reduce(fn, init)` | Reduce to single value |
-| `count()` | `arr.count(): IntegerExpr` | Number of elements |
-
-### Example: Sum Array
-
-```typescript
-const sumArray = East.function(
-    [ArrayType(IntegerType)],
-    IntegerType,
-    ($, arr) => {
-        $.return(arr.sum());
-    }
-);
-```
-
-...
-```
-
-### Benefits of This Structure
-
-| Aspect | Monolithic (api.md) | Granular (topic files) |
-|--------|---------------------|------------------------|
-| **Search precision** | Returns entire section | Returns specific topic |
-| **Index size** | Large sections, fuzzy matches | Small docs, precise matches |
-| **Keyword coverage** | Implicit in content | Explicit in frontmatter |
-| **Human readability** | Scroll to find topic | Navigate to specific file |
-| **Maintenance** | Edit large file | Edit focused file |
-| **Token efficiency** | May inject irrelevant content | Inject only relevant topic |
+| **Search precision** | Entire section matches | Individual example matches |
+| **Keyword coverage** | Implicit in content | Explicit `keywords` array |
+| **Token efficiency** | Inject irrelevant content | Inject single example |
+| **Maintenance** | Edit large file | Edit focused example |
 
 ### Indexing Strategy
 
-The build-index script extracts from YAML frontmatter in `.md` files and also indexes associated `.example.ts` files:
+The `scripts/generate-index.ts` script parses `*.examples.ts` files into a search index:
 
 ```typescript
-interface IndexedDocument {
-  id: string;           // "east:expressions/collections:array-operations"
+interface IndexEntry {
+  id: string;           // "east:datetime.examples.ts:datetimeGetYear"
   skill: string;        // "east"
-  path: string;         // "expressions/collections.md"
-  title: string;        // "Array Operations"
-  keywords: string[];   // ["array", "sum", "map", "filter", ...]
-  summary: string;      // "Operations for working with arrays..."
-  content: string;      // Markdown content (truncated)
-  examples: string[];   // ["collections.example.ts"]
-  exampleCode: string;  // Content of example files (for code search)
+  package: string;      // "east"
+  file: string;         // "east/test/datetime.examples.ts"
+  suite: string;        // "Component Extraction" (from section comment)
+  test: string;         // "Extract the year from a datetime" (description)
+  keywords: string[];   // ["datetime", "DateTimeType", "getYear", "year", "component"]
+  imports: string[];    // ["import { East, DateTimeType, ... } from \"@elaraai/east\""]
+  source: string;       // Annotated source (description + inputs/returns as comments + fn)
 }
 ```
 
+For examples, the `source` field is composed with description and inputs/returns as comments:
+
+```typescript
+// Extract the year from a datetime
+// inputs: []  returns: 2024n
+East.function([], IntegerType, ($) => {
+    const d = $.const(new Date("2024-03-15T10:30:45.123Z"), DateTimeType);
+    return d.getYear();
+})
+```
+
 **Search matching uses**:
-1. `keywords` array (boosted 3x) - explicit terms from frontmatter
-2. `title` (boosted 2x) - section heading
-3. `summary` (boosted 1.5x) - short description
-4. `exampleCode` (boosted 1.2x) - actual TypeScript examples
-5. `content` (boosted 1x) - markdown prose
+1. `keywords` array - explicit terms from the example definition
+2. `test` (description) - human-readable description
+3. `source` - actual TypeScript code
+4. `suite` - section grouping
 
 ## Search Algorithm
 
 We use MiniSearch for full-text search with field boosting, searching **the entire user prompt** against all indexed documents.
 
-### Document Parsing (with YAML frontmatter)
+### Document Parsing
 
-```typescript
-import { parse as parseYaml } from 'yaml';
+The index is built by `scripts/generate-index.ts` which parses two file types:
 
-interface DocumentFrontmatter {
-  title: string;
-  keywords: string[];
-  summary?: string;
-  related?: string[];
-  examples?: string[];
-}
-
-// See IndexedDocument definition in "Indexing Strategy" section above
-
-function parseDocument(content: string, skillName: string, filePath: string): IndexedDocument[] {
-  const docs: IndexedDocument[] = [];
-
-  // Split on YAML frontmatter markers (--- at start of line)
-  const sections = content.split(/^---$/m).filter(s => s.trim());
-
-  for (let i = 0; i < sections.length; i += 2) {
-    // Even indices are YAML frontmatter, odd indices are content
-    if (i + 1 >= sections.length) break;
-
-    try {
-      const frontmatter = parseYaml(sections[i]) as DocumentFrontmatter;
-      const docContent = sections[i + 1].trim();
-
-      const id = `${skillName}:${filePath}:${frontmatter.title.toLowerCase().replace(/\s+/g, '-')}`;
-
-      docs.push({
-        id,
-        skill: skillName,
-        path: filePath,
-        title: frontmatter.title,
-        keywords: frontmatter.keywords || [],
-        summary: frontmatter.summary || '',
-        content: docContent.slice(0, 2000)  // Truncate for index
-      });
-    } catch {
-      // Skip malformed sections
-    }
-  }
-
-  return docs;
-}
-```
+The script extracts `export const name = example({...})` declarations from `*.examples.ts` files. Fields (`keywords`, `description`, `fn`, `inputs`, `returns`) are parsed from the object literal using balanced bracket matching. Section comments (`// ---\n// Name\n// ---`) provide suite grouping.
 
 ### MiniSearch Configuration
 
 ```typescript
 import MiniSearch from 'minisearch';
 
-function createIndex(sections: Section[]): MiniSearch {
+function createIndex(entries: IndexEntry[]): MiniSearch {
   const index = new MiniSearch({
-    fields: ['header', 'content', 'keywords'],
-    storeFields: ['id', 'source', 'header', 'content'],
+    fields: ['test', 'source', 'keywords', 'suite'],
+    storeFields: ['id', 'skill', 'package', 'file', 'suite', 'test', 'keywords', 'imports', 'source'],
     searchOptions: {
-      boost: { header: 3, keywords: 2, content: 1 },
+      boost: { keywords: 3, test: 2, suite: 1.5, source: 1 },
       fuzzy: 0.2,
       prefix: true
     }
   });
 
-  index.addAll(sections.map(s => ({
-    ...s,
-    keywords: s.keywords.join(' ')
+  index.addAll(entries.map(e => ({
+    ...e,
+    keywords: e.keywords.join(' ')
   })));
 
   return index;
@@ -751,18 +595,19 @@ Instead of parsing docs at runtime, we pre-build a search index at CI time.
 east-plugin/
 ├── build/
 │   └── index.json              # Pre-built search index (generated by CI, gitignored)
+├── scripts/
+│   └── generate-index.ts       # Index builder script
+├── index.config.json           # Source configuration (packages, patterns, directories)
 ├── skills/
 │   ├── east/
-│   │   ├── SKILL.md
-│   │   └── reference/
-│   │       ├── types.md, types.example.ts
-│   │       ├── functions.md, functions.example.ts
-│   │       └── ...
+│   │   └── SKILL.md
+│   ├── east-node-std/
+│   │   └── SKILL.md
 │   └── ...
 ├── hooks/
 │   └── src/
 │       └── lib/
-│           └── build-index.ts  # Index builder script
+│           └── search.ts       # Search logic (loads index.json)
 └── ...
 ```
 
@@ -773,129 +618,56 @@ east-plugin/
 ```json
 {
   "version": 1,
-  "built": "2024-01-15T10:30:00Z",
-  "documents": [
+  "generated": "2024-01-15T10:30:00Z",
+  "stats": {
+    "totalEntries": 450,
+    "totalFiles": 25,
+    "packages": { "east": 350, "east-node-std": 50, "east-node-io": 30, "east-ui": 20 }
+  },
+  "entries": [
     {
-      "id": "east:types.md:primitive-types",
+      "id": "east:datetime.examples.ts:datetimeGetYear",
       "skill": "east",
-      "path": "types.md",
-      "title": "Primitive Types",
-      "keywords": ["IntegerType", "FloatType", "StringType", "BooleanType"],
-      "summary": "Basic scalar types for East programs",
-      "content": "East provides primitive types for..."
+      "package": "east",
+      "file": "east/test/datetime.examples.ts",
+      "suite": "Component Extraction",
+      "test": "Extract the year from a datetime",
+      "keywords": ["datetime", "DateTimeType", "getYear", "year", "component"],
+      "imports": ["import { East, DateTimeType, IntegerType, ... } from \"@elaraai/east\""],
+      "source": "// Extract the year from a datetime\n// inputs: []  returns: 2024n\nEast.function([], IntegerType, ($) => {\n    const d = $.const(new Date(\"2024-03-15T10:30:45.123Z\"), DateTimeType);\n    return d.getYear();\n})"
     },
     {
-      "id": "east:functions.md:defining-functions",
+      "id": "east:array.spec.ts:pushlast-appends-to-array",
       "skill": "east",
-      "path": "functions.md",
-      "title": "Defining Functions",
-      "keywords": ["East.function", "East.asyncFunction", "$.return"],
-      "summary": "How to define East functions",
-      "content": "Use East.function() to create..."
+      "package": "east",
+      "file": "east/test/array.spec.ts",
+      "suite": "Array",
+      "test": "pushLast appends to array",
+      "keywords": ["push", "mutation"],
+      "imports": ["import { East, ArrayType, IntegerType } from \"@elaraai/east\""],
+      "source": "const a = $.let([], ArrayType(IntegerType));\n$(a.pushLast(1n));\n$(a.pushLast(2n));\nreturn a;"
     }
   ]
 }
 ```
 
-### Build Script: scripts/build-index.ts
+### Build Script: scripts/generate-index.ts
 
-```typescript
-#!/usr/bin/env npx tsx
-// Run: npx tsx scripts/build-index.ts
+The build script is configured via `index.config.json` and invoked as:
 
-import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
-import { parse as parseYaml } from 'yaml';
+```bash
+npm run build && node dist/scripts/generate-index.js --base-dir /path/to/repos
+```
 
-const SKILLS_DIR = './skills';
-const BUILD_DIR = './build';
-const OUTPUT_FILE = `${BUILD_DIR}/index.json`;
+Configuration supports multiple source directories with glob patterns (string or array):
 
-interface Frontmatter {
-  title: string;
-  keywords: string[];
-  summary?: string;
-  examples?: string[];
+```json
+{
+  "sources": [
+    { "package": "east", "skill": "east", "testDir": "east/test", "pattern": "*.examples.ts" },
+    { "package": "east-node-std", "skill": "east-node-std", "testDir": "east-node/packages/east-node-std/src", "pattern": "*.examples.ts" }
+  ]
 }
-
-// IndexedDocument - see "Indexing Strategy" section for full definition
-
-interface Index {
-  version: number;
-  built: string;
-  documents: IndexedDocument[];
-}
-
-function parseDocuments(content: string, skillName: string, filePath: string): IndexedDocument[] {
-  const docs: IndexedDocument[] = [];
-
-  // Split on YAML frontmatter markers (--- at start of line)
-  const parts = content.split(/^---$/m).filter(s => s.trim());
-
-  for (let i = 0; i < parts.length; i += 2) {
-    if (i + 1 >= parts.length) break;
-
-    try {
-      const frontmatter = parseYaml(parts[i]) as Frontmatter;
-      const docContent = parts[i + 1].trim();
-
-      if (!frontmatter.title || !frontmatter.keywords) continue;
-
-      const id = `${skillName}:${filePath}:${frontmatter.title.toLowerCase().replace(/\s+/g, '-')}`;
-
-      docs.push({
-        id,
-        skill: skillName,
-        path: filePath,
-        title: frontmatter.title,
-        keywords: frontmatter.keywords,
-        summary: frontmatter.summary || '',
-        content: docContent.slice(0, 2000)
-      });
-    } catch {
-      // Skip malformed sections
-    }
-  }
-
-  return docs;
-}
-
-function buildIndex(): void {
-  const index: Index = {
-    version: 1,
-    built: new Date().toISOString(),
-    documents: []
-  };
-
-  const skillDirs = readdirSync(SKILLS_DIR, { withFileTypes: true })
-    .filter(d => d.isDirectory())
-    .map(d => d.name);
-
-  for (const skill of skillDirs) {
-    const refDir = join(SKILLS_DIR, skill, 'reference');
-    if (!existsSync(refDir)) continue;
-
-    // Index all .md files in reference directory
-    const mdFiles = readdirSync(refDir).filter(f => f.endsWith('.md'));
-
-    for (const file of mdFiles) {
-      const filePath = join(refDir, file);
-      const content = readFileSync(filePath, 'utf-8');
-      const docs = parseDocuments(content, skill, file);
-      index.documents.push(...docs);
-    }
-
-    console.log(`Indexed ${skill}: ${index.documents.filter(d => d.skill === skill).length} documents`);
-  }
-
-  if (!existsSync(BUILD_DIR)) {
-    mkdirSync(BUILD_DIR, { recursive: true });
-  }
-  writeFileSync(OUTPUT_FILE, JSON.stringify(index, null, 2));
-  console.log(`\nWrote ${OUTPUT_FILE} (${index.documents.length} total documents)`);
-}
-
-buildIndex();
 ```
 
 ### GitHub Action Integration
@@ -1133,19 +905,17 @@ east-plugin/
 │   └── index.json                    # Pre-built search index (gitignored)
 ├── skills/
 │   ├── east/
-│   │   ├── SKILL.md
-│   │   └── reference/
-│   │       ├── types.md, types.example.ts
-│   │       ├── functions.md, functions.example.ts
-│   │       ├── expressions.md, expressions.example.ts
-│   │       └── compilation.md, compilation.example.ts
+│   │   └── SKILL.md
 │   ├── east-node-std/
-│   │   ├── SKILL.md
-│   │   └── reference/
-│   │       ├── console.md, console.example.ts
-│   │       ├── filesystem.md, filesystem.example.ts
-│   │       └── ... (other topics)
-│   └── ... (other skills)
+│   │   └── SKILL.md
+│   ├── east-node-io/
+│   │   └── SKILL.md
+│   ├── east-py-datascience/
+│   │   └── SKILL.md
+│   ├── east-ui/
+│   │   └── SKILL.md
+│   └── e3/
+│       └── SKILL.md
 ├── scripts/
 │   ├── lib/                          # Shared bash libraries
 │   │   └── common.sh
@@ -1346,7 +1116,9 @@ This plan must be executed in order. Phase 1 (documentation overhaul) is a prere
 
 ### Phase 1: Documentation Overhaul (All Source Repos)
 
-Overhaul SKILL.md, reference docs, and example files across ALL East repositories. This is the foundation for the search index.
+> **Status**: Partially complete. The `east` repo now has `*.examples.ts` files (array, blob, block, boolean, datetime, dict, float) using the structured `example()` pattern, and the monolithic `reference/` directories have been removed from the plugin. The index generator parses `*.examples.ts` files.
+
+Overhaul SKILL.md and example files across ALL East repositories. This is the foundation for the search index. Reference docs (`reference/api.md`, `reference/examples.md`) have been replaced by `*.examples.ts` files with structured `example()` definitions.
 
 #### 1.1 Repository: `east` (Core Language)
 
