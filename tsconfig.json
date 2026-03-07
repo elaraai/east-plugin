@@ -25,5 +25,5 @@
     "noErrorTruncation": true,
     "incremental": true
   },
-  "include": ["scripts/**/*.ts"]
+  "include": ["scripts/**/*.ts", "hooks/**/*.ts", "lib/**/*.ts", "mcp/**/*.ts"]
 }

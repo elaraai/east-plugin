@@ -1,4 +1,4 @@
-// lib/hook-io.js
+// lib/hook-io.ts
 async function readHookInput() {
   let input = "";
   for await (const chunk of process.stdin) {
@@ -16,7 +16,7 @@ function writeHookOutput(hookEventName, additionalContext) {
   process.stdout.write(JSON.stringify(output));
 }
 
-// lib/east-project.js
+// lib/east-project.ts
 import { readFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
 var PACKAGE_SKILL_MAP = {
@@ -60,11 +60,11 @@ async function getEastProjectInfo(cwd) {
   return { isEast: skills.length > 0, skills, pkg };
 }
 
-// lib/lazy-search.js
+// lib/lazy-search.ts
 import { join as join2, dirname as dirname2 } from "node:path";
 import { fileURLToPath } from "node:url";
 
-// lib/search.js
+// lib/search.ts
 import { readFile as readFile2 } from "node:fs/promises";
 
 // node_modules/minisearch/dist/es/index.js
@@ -1877,7 +1877,7 @@ var objectToNumericMapAsync = async (object) => {
 var wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 var SPACE_OR_PUNCTUATION = /[\n\r\p{Z}\p{P}]+/u;
 
-// lib/search.js
+// lib/search.ts
 var MIN_SCORE = 50;
 async function buildSearchIndex(indexPath) {
   const raw = await readFile2(indexPath, "utf-8");
@@ -1900,14 +1900,16 @@ async function buildSearchIndex(indexPath) {
 }
 function formatResults(results) {
   const sections = results.map((r) => {
-    const keywordsStr = r.keywords.join(", ");
-    const imports = r.imports.join("\n");
+    const keywords = r.keywords;
+    const imports = r.imports;
+    const keywordsStr = keywords.join(", ");
+    const importsStr = imports.join("\n");
     return [
       `### ${r.test}`,
       `Suite: ${r.suite} | Package: ${r.package} | Keywords: ${keywordsStr}`,
       "",
       "```typescript",
-      imports,
+      importsStr,
       "",
       r.source,
       "```"
@@ -1918,7 +1920,7 @@ function formatResults(results) {
   );
 }
 
-// lib/lazy-search.js
+// lib/lazy-search.ts
 var __dirname = dirname2(fileURLToPath(import.meta.url));
 var INDEX_PATH = join2(__dirname, "..", "..", "index.json");
 var indexPromise = null;
@@ -1948,7 +1950,7 @@ async function searchAndFormat(query, filterSkills = null, limit = 5) {
   return formatResults(results);
 }
 
-// lib/transcript.js
+// lib/transcript.ts
 import { readFile as readFile3 } from "node:fs/promises";
 var MAX_READ_BYTES = 2e5;
 async function readRecentEntries(transcriptPath, maxEntries = 30) {
@@ -1978,8 +1980,10 @@ function extractRecentContext(entries) {
   const files = [];
   let textCount = 0;
   for (const entry of entries) {
-    if (entry.type !== "assistant" || !entry.message?.content) continue;
-    for (const block of entry.message.content) {
+    if (entry.type !== "assistant") continue;
+    const content = entry.message?.content;
+    if (!Array.isArray(content)) continue;
+    for (const block of content) {
       if (block.type === "text" && block.text) {
         texts.push(block.text);
         textCount++;
@@ -1988,10 +1992,10 @@ function extractRecentContext(entries) {
         textCount++;
       } else if (block.type === "tool_use") {
         const filePath = block.input?.file_path;
-        if (filePath && !files.includes(filePath)) {
+        if (typeof filePath === "string" && !files.includes(filePath)) {
           files.push(filePath);
         }
-        if (block.name === "Grep" && block.input?.pattern) {
+        if (block.name === "Grep" && typeof block.input?.pattern === "string") {
           texts.push(block.input.pattern);
         }
       }
@@ -2003,7 +2007,7 @@ function extractRecentContext(entries) {
   return [reasoning, fileContext].filter(Boolean).join("\n");
 }
 
-// hooks/prompt-submit.js
+// hooks/prompt-submit.ts
 async function main() {
   const event = await readHookInput();
   const prompt = event.prompt;

@@ -1,4 +1,4 @@
-// lib/hook-io.js
+// lib/hook-io.ts
 async function readHookInput() {
   let input = "";
   for await (const chunk of process.stdin) {
@@ -16,7 +16,7 @@ function writeHookOutput(hookEventName, additionalContext) {
   process.stdout.write(JSON.stringify(output));
 }
 
-// lib/east-project.js
+// lib/east-project.ts
 import { readFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
 var PACKAGE_SKILL_MAP = {
@@ -60,7 +60,7 @@ async function getEastProjectInfo(cwd) {
   return { isEast: skills.length > 0, skills, pkg };
 }
 
-// hooks/session-start.js
+// hooks/session-start.ts
 async function main() {
   const event = await readHookInput();
   const cwd = event.cwd || process.cwd();

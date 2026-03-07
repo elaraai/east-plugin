@@ -5,16 +5,10 @@ import { buildSearchIndex, formatResults, MIN_SCORE } from "./search.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // When bundled by esbuild into dist/hooks/, __dirname is dist/hooks/
 // so we need ../../index.json to reach the project root.
-// When run unbundled from lib/, __dirname is lib/ so ../index.json works.
-// Use ../../ since the bundled path is the one that matters at runtime.
 const INDEX_PATH = join(__dirname, "..", "..", "index.json");
 
-let indexPromise = null;
+let indexPromise: ReturnType<typeof buildSearchIndex> | null = null;
 
-/**
- * Lazily load the search index. Only call this after fast checks
- * confirm we actually need to search (East project, East file, etc).
- */
 function getIndex() {
   if (!indexPromise) {
     indexPromise = buildSearchIndex(INDEX_PATH);
@@ -22,27 +16,25 @@ function getIndex() {
   return indexPromise;
 }
 
-/**
- * Search the index and return formatted results.
- * Returns null if no relevant results found.
- * @param {string} query - Search text
- * @param {string[]|null} filterSkills - Only return results matching these skills
- * @param {number} limit - Max results
- */
-export async function searchAndFormat(query, filterSkills = null, limit = 5) {
-  let miniSearch;
+export async function searchAndFormat(
+  query: string,
+  filterSkills: string[] | null = null,
+  limit = 5,
+): Promise<string | null> {
+  let miniSearch: Awaited<ReturnType<typeof buildSearchIndex>>;
   try {
     miniSearch = await getIndex();
   } catch {
     return null;
   }
 
-  let results = miniSearch.search(query, { limit: limit * 2 });
+  // MiniSearch supports `limit` at runtime but it's not in the type definitions
+  let results = miniSearch.search(query, { limit: limit * 2 } as Parameters<typeof miniSearch.search>[1]);
 
   results = results.filter((r) => r.score >= MIN_SCORE);
 
   if (filterSkills && results.length > 0) {
-    const filtered = results.filter((r) => filterSkills.includes(r.skill));
+    const filtered = results.filter((r) => filterSkills.includes(r.skill as string));
     if (filtered.length > 0) {
       results = filtered;
     }

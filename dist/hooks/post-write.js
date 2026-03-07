@@ -1,7 +1,7 @@
-// hooks/post-write.js
+// hooks/post-write.ts
 import { readFile as readFile2 } from "node:fs/promises";
 
-// lib/hook-io.js
+// lib/hook-io.ts
 async function readHookInput() {
   let input = "";
   for await (const chunk of process.stdin) {
@@ -19,7 +19,7 @@ function writeHookOutput(hookEventName, additionalContext) {
   process.stdout.write(JSON.stringify(output));
 }
 
-// lib/east-project.js
+// lib/east-project.ts
 import { readFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
 var PACKAGE_SKILL_MAP = {
@@ -63,7 +63,7 @@ async function getEastProjectInfo(cwd) {
   return { isEast: skills.length > 0, skills, pkg };
 }
 
-// hooks/post-write.js
+// hooks/post-write.ts
 var EAST_IMPORT_PATTERN = /@elaraai\/east/;
 var MISTAKE_PATTERNS = [
   [/East\.IntegerType/g, "Use `IntegerType` directly (imported from @elaraai/east), not `East.IntegerType`"],
@@ -116,6 +116,7 @@ async function main() {
     content = await readFile2(filePath, "utf-8");
   } catch {
     process.exit(0);
+    return;
   }
   if (!EAST_IMPORT_PATTERN.test(content)) process.exit(0);
   const mistakes = [];

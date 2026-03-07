@@ -39,7 +39,7 @@ server.tool(
   async ({ query, limit, package: packageFilter }) => {
     const miniSearch = await indexPromise;
 
-    let results = miniSearch.search(query, { limit: limit * 2 });
+    let results = miniSearch.search(query, { limit: limit * 2 } as Parameters<typeof miniSearch.search>[1]);
 
     // Filter out low-relevance noise
     results = results.filter((r) => r.score >= MIN_SCORE);
