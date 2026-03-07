@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "bundle": "esbuild hooks/prompt-submit.js hooks/session-start.js mcp/search-server.js --bundle --format=esm --platform=node --outdir=dist --preserve-symlinks",
+    "bundle": "esbuild hooks/prompt-submit.js hooks/session-start.js hooks/subagent-start.js hooks/pre-agent.js hooks/pre-write.js hooks/post-write.js mcp/search-server.js --bundle --format=esm --platform=node --outdir=dist --preserve-symlinks",
     "generate-index": "npm run build && node dist/scripts/generate-index.js && npm run bundle"
   },
   "engines": {

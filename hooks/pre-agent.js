@@ -5,13 +5,15 @@ import { readRecentEntries, extractRecentContext } from "../lib/transcript.js";
 
 async function main() {
   const event = await readHookInput();
-  const prompt = event.prompt;
+  const cwd = event.cwd || process.cwd();
+
+  const { isEast, skills } = await getEastProjectInfo(cwd);
+  if (!isEast) process.exit(0);
+
+  const prompt = event.tool_input?.prompt;
   if (!prompt) process.exit(0);
 
-  const cwd = event.cwd || process.cwd();
-  const { isEast, skills } = await getEastProjectInfo(cwd);
-
-  // Build search query: user prompt + recent conversation context
+  // Build search query: subagent prompt + recent conversation context
   let searchQuery = prompt;
 
   if (event.transcript_path) {
@@ -22,11 +24,10 @@ async function main() {
     }
   }
 
-  const filterSkills = isEast ? skills : null;
-  const results = await searchAndFormat(searchQuery, filterSkills, 5);
+  const results = await searchAndFormat(searchQuery, skills, 5);
   if (!results) process.exit(0);
 
-  writeHookOutput("UserPromptSubmit", results);
+  writeHookOutput("PreToolUse", results);
 }
 
 main().catch(() => process.exit(0));

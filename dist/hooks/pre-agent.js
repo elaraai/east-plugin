@@ -2003,13 +2003,14 @@ function extractRecentContext(entries) {
   return [reasoning, fileContext].filter(Boolean).join("\n");
 }
 
-// hooks/prompt-submit.js
+// hooks/pre-agent.js
 async function main() {
   const event = await readHookInput();
-  const prompt = event.prompt;
-  if (!prompt) process.exit(0);
   const cwd = event.cwd || process.cwd();
   const { isEast, skills } = await getEastProjectInfo(cwd);
+  if (!isEast) process.exit(0);
+  const prompt = event.tool_input?.prompt;
+  if (!prompt) process.exit(0);
   let searchQuery = prompt;
   if (event.transcript_path) {
     const entries = await readRecentEntries(event.transcript_path);
@@ -2018,9 +2019,8 @@ async function main() {
       searchQuery = prompt + "\n" + context.slice(0, 1e3);
     }
   }
-  const filterSkills = isEast ? skills : null;
-  const results = await searchAndFormat(searchQuery, filterSkills, 5);
+  const results = await searchAndFormat(searchQuery, skills, 5);
   if (!results) process.exit(0);
-  writeHookOutput("UserPromptSubmit", results);
+  writeHookOutput("PreToolUse", results);
 }
 main().catch(() => process.exit(0));

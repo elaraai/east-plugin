@@ -1,3 +1,6 @@
+// hooks/pre-write.js
+import { readFile as readFile4 } from "node:fs/promises";
+
 // lib/hook-io.js
 async function readHookInput() {
   let input = "";
@@ -2003,24 +2006,43 @@ function extractRecentContext(entries) {
   return [reasoning, fileContext].filter(Boolean).join("\n");
 }
 
-// hooks/prompt-submit.js
+// hooks/pre-write.js
+var EAST_IMPORT_PATTERN = /@elaraai\/east/;
 async function main() {
   const event = await readHookInput();
-  const prompt = event.prompt;
-  if (!prompt) process.exit(0);
   const cwd = event.cwd || process.cwd();
   const { isEast, skills } = await getEastProjectInfo(cwd);
-  let searchQuery = prompt;
+  if (!isEast) process.exit(0);
+  const toolName = event.tool_name;
+  const filePath = event.tool_input?.file_path;
+  if (filePath && !filePath.endsWith(".ts") && !filePath.endsWith(".tsx") && !filePath.endsWith(".js")) {
+    process.exit(0);
+  }
+  let codeContent = "";
+  if (toolName === "Write") {
+    codeContent = event.tool_input?.content || "";
+  } else if (toolName === "Edit") {
+    if (filePath) {
+      try {
+        codeContent = await readFile4(filePath, "utf-8");
+      } catch {
+        codeContent = event.tool_input?.new_string || "";
+      }
+    }
+  }
+  if (!EAST_IMPORT_PATTERN.test(codeContent)) process.exit(0);
+  const newCode = toolName === "Edit" ? event.tool_input?.new_string || "" : event.tool_input?.content || "";
+  let searchQuery = newCode.slice(0, 1e3);
   if (event.transcript_path) {
     const entries = await readRecentEntries(event.transcript_path);
     const context = extractRecentContext(entries);
     if (context) {
-      searchQuery = prompt + "\n" + context.slice(0, 1e3);
+      searchQuery = context.slice(0, 1e3) + "\n" + searchQuery;
     }
   }
-  const filterSkills = isEast ? skills : null;
-  const results = await searchAndFormat(searchQuery, filterSkills, 5);
+  if (!searchQuery.trim()) process.exit(0);
+  const results = await searchAndFormat(searchQuery, skills, 3);
   if (!results) process.exit(0);
-  writeHookOutput("UserPromptSubmit", results);
+  writeHookOutput("PreToolUse", results);
 }
 main().catch(() => process.exit(0));
