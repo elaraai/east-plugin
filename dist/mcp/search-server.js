@@ -6797,7 +6797,7 @@ var require_dist = __commonJS({
   }
 });
 
-// mcp/search-server.js
+// mcp/search-server.ts
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -30091,7 +30091,7 @@ var StdioServerTransport = class {
   }
 };
 
-// lib/search.js
+// lib/search.ts
 import { readFile } from "node:fs/promises";
 
 // node_modules/minisearch/dist/es/index.js
@@ -31904,7 +31904,7 @@ var objectToNumericMapAsync = async (object3) => {
 var wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 var SPACE_OR_PUNCTUATION = /[\n\r\p{Z}\p{P}]+/u;
 
-// lib/search.js
+// lib/search.ts
 var MIN_SCORE = 50;
 async function buildSearchIndex(indexPath) {
   const raw = await readFile(indexPath, "utf-8");
@@ -31927,14 +31927,16 @@ async function buildSearchIndex(indexPath) {
 }
 function formatResults(results) {
   const sections = results.map((r) => {
-    const keywordsStr = r.keywords.join(", ");
-    const imports = r.imports.join("\n");
+    const keywords = r.keywords;
+    const imports = r.imports;
+    const keywordsStr = keywords.join(", ");
+    const importsStr = imports.join("\n");
     return [
       `### ${r.test}`,
       `Suite: ${r.suite} | Package: ${r.package} | Keywords: ${keywordsStr}`,
       "",
       "```typescript",
-      imports,
+      importsStr,
       "",
       r.source,
       "```"
@@ -31945,7 +31947,7 @@ function formatResults(results) {
   );
 }
 
-// mcp/search-server.js
+// mcp/search-server.ts
 var __dirname = dirname(fileURLToPath(import.meta.url));
 var INDEX_PATH = join(__dirname, "..", "..", "index.json");
 var indexPromise = buildSearchIndex(INDEX_PATH);

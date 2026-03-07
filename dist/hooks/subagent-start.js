@@ -60,20 +60,22 @@ async function getEastProjectInfo(cwd) {
   return { isEast: skills.length > 0, skills, pkg };
 }
 
-// hooks/session-start.ts
+// hooks/subagent-start.ts
 async function main() {
   const event = await readHookInput();
   const cwd = event.cwd || process.cwd();
   const { isEast, skills } = await getEastProjectInfo(cwd);
   if (!isEast) process.exit(0);
-  const skillList = skills.map((s) => `- ${s}`).join("\n");
+  const skillList = skills.map((s) => `/east:${s}`).join(", ");
+  const packageList = skills.map((s) => `@elaraai/${s}`).join(", ");
   const context = [
-    "This is an East project. The following East skills are available and should be used when working with East code:",
+    `This is an East project using ${packageList}.`,
     "",
-    skillList,
-    "",
-    "Use /east (or the relevant skill) when writing East programs. The skills provide type-safe API patterns and examples."
+    "When working with East code:",
+    "- Use the mcp__plugin_east_east-search__search_east_examples tool to look up East API examples before writing or modifying East code",
+    "- East is a statically typed, expression-based language embedded in TypeScript \u2014 it has unique patterns that differ from regular TypeScript",
+    `- Available skills: ${skillList}`
   ].join("\n");
-  writeHookOutput("SessionStart", context);
+  writeHookOutput("SubagentStart", context);
 }
 main().catch(() => process.exit(0));
