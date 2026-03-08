@@ -4,7 +4,7 @@
  * Extracts structured examples from East `*.examples.ts` files
  * into a search index (index.json).
  *
- * Usage: node dist/scripts/generate-index.js --base-dir /path/to/repos
+ * Usage: node build/scripts/generate-index.js --base-dir /path/to/repos
  *
  * Each example uses the `example()` pattern:
  *   export const name = example({ keywords, description, fn, inputs, returns })
@@ -407,7 +407,7 @@ function main(): void {
     const { baseDir } = parseArgs(process.argv.slice(2));
     const resolvedBaseDir = path.resolve(baseDir);
 
-    // Resolve project root (dist/scripts -> project root is ../../)
+    // Resolve project root (build/scripts -> project root is ../../)
     const projectRoot = path.resolve(import.meta.dirname, "..", "..");
 
     // Read config

@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/dist/hooks/session-start.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/.build/hooks/session-start.js\"",
             "timeout": 5
           }
         ]
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/dist/hooks/prompt-submit.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/.build/hooks/prompt-submit.js\"",
             "timeout": 5
           }
         ]
@@ -28,7 +28,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/dist/hooks/subagent-start.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/.build/hooks/subagent-start.js\"",
             "timeout": 5
           }
         ]
@@ -40,7 +40,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/dist/hooks/pre-write.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/.build/hooks/pre-write.js\"",
             "timeout": 3
           }
         ]
@@ -50,7 +50,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/dist/hooks/pre-agent.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/.build/hooks/pre-agent.js\"",
             "timeout": 5
           }
         ]
@@ -62,7 +62,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/dist/hooks/post-write.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/.build/hooks/post-write.js\"",
             "timeout": 3
           }
         ]

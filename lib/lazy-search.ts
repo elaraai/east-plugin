@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { buildSearchIndex, formatResults, MIN_SCORE } from "./search.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-// When bundled by esbuild into dist/hooks/, __dirname is dist/hooks/
+// When bundled by esbuild into .build/hooks/, __dirname is .build/hooks/
 // so we need ../../index.json to reach the project root.
 const INDEX_PATH = join(__dirname, "..", "..", "index.json");
 

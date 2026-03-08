@@ -2,7 +2,7 @@
   "mcpServers": {
     "east-search": {
       "command": "node",
-      "args": ["${CLAUDE_PLUGIN_ROOT}/dist/mcp/search-server.js"]
+      "args": ["${CLAUDE_PLUGIN_ROOT}/.build/mcp/search-server.js"]
     }
   }
 }

@@ -6,7 +6,7 @@ import { z } from "zod";
 import { buildSearchIndex, formatResults, MIN_SCORE } from "../lib/search.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-// Two levels up from dist/mcp/ to project root
+// Two levels up from .build/mcp/ to project root
 const INDEX_PATH = join(__dirname, "..", "..", "index.json");
 
 // Load index once at startup

@@ -4,9 +4,4 @@ node_modules/
 .env
 .vscode/
 build/
-dist/scripts/
-dist/lib/
-dist/tsconfig.tsbuildinfo
-dist/**/*.d.ts
-dist/**/*.d.ts.map
-dist/**/*.js.map
+dist/
