@@ -76,7 +76,7 @@ jobs:
         run: npm ci
 
       - name: Generate search index and bundle
-        run: npm run generate-index -- --base-dir .sources
+        run: npm run generate-index -- --base-dir .sources && npm run bundle
 
       - name: Clean up source repos
         run: rm -rf .sources
