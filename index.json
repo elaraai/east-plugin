@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated": "2026-03-06T13:27:36.572Z",
+  "generated": "2026-03-08T12:04:37.452Z",
   "stats": {
-    "totalEntries": 601,
+    "totalEntries": 493,
     "totalFiles": 19,
     "packages": {
-      "east": 594,
+      "east": 486,
       "e3": 7
     }
   },
@@ -1568,7 +1568,7 @@
         "bytes"
       ],
       "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
+        "import { East, BlobType, StringType, IntegerType, StructType, ArrayType, example } from \"@elaraai/east\";"
       ],
       "source": "// Get the size of a blob in bytes\n// inputs: []  returns: 3n\nEast.function([], IntegerType, ($) => {\n        const b = $.const(Uint8Array.from([1, 2, 3]), BlobType);\n        return b.size();\n    })"
     },
@@ -1588,7 +1588,7 @@
         "access"
       ],
       "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
+        "import { East, BlobType, StringType, IntegerType, StructType, ArrayType, example } from \"@elaraai/east\";"
       ],
       "source": "// Get a byte value from a blob by index\n// inputs: []  returns: 20n\nEast.function([], IntegerType, ($) => {\n        const b = $.const(Uint8Array.from([10, 20, 30]), BlobType);\n        return b.getUint8(1n);\n    })"
     },
@@ -1608,7 +1608,7 @@
         "encoding"
       ],
       "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
+        "import { East, BlobType, StringType, IntegerType, StructType, ArrayType, example } from \"@elaraai/east\";"
       ],
       "source": "// Encode a string to a UTF-8 blob\n// inputs: []  returns: Uint8Array.from([0x48, 0x65, 0x6c, 0x6c, 0x6f])\nEast.function([], BlobType, ($) => {\n        const s = $.const(\"Hello\", StringType);\n        return s.encodeUtf8();\n    })"
     },
@@ -1628,7 +1628,7 @@
         "decoding"
       ],
       "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
+        "import { East, BlobType, StringType, IntegerType, StructType, ArrayType, example } from \"@elaraai/east\";"
       ],
       "source": "// Decode a UTF-8 blob to a string\n// inputs: []  returns: \"Hello\"\nEast.function([], StringType, ($) => {\n        const b = $.const(Uint8Array.from([0x48, 0x65, 0x6c, 0x6c, 0x6f]), BlobType);\n        return b.decodeUtf8();\n    })"
     },
@@ -1648,7 +1648,7 @@
         "encoding"
       ],
       "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
+        "import { East, BlobType, StringType, IntegerType, StructType, ArrayType, example } from \"@elaraai/east\";"
       ],
       "source": "// Encode a string to a UTF-16 blob with BOM\n// inputs: []  returns: Uint8Array.from([\n        0xFF, 0xFE,\n        0x48, 0x00,\n        0x65, 0x00,\n        0x6C, 0x00,\n        0x6C, 0x00,\n        0x6F, 0x00,\n    ])\nEast.function([], BlobType, ($) => {\n        const s = $.const(\"Hello\", StringType);\n        return s.encodeUtf16();\n    })"
     },
@@ -1668,7 +1668,7 @@
         "decoding"
       ],
       "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
+        "import { East, BlobType, StringType, IntegerType, StructType, ArrayType, example } from \"@elaraai/east\";"
       ],
       "source": "// Decode a UTF-16 blob to a string\n// inputs: []  returns: \"Hello\"\nEast.function([], StringType, ($) => {\n        const b = $.const(Uint8Array.from([\n            0xFF, 0xFE,\n            0x48, 0x00,\n            0x65, 0x00,\n            0x6C, 0x00,\n            0x6C, 0x00,\n            0x6F, 0x00,\n        ]), BlobType);\n        return b.decodeUtf16();\n    })"
     },
@@ -1689,7 +1689,7 @@
         "serialization"
       ],
       "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
+        "import { East, BlobType, StringType, IntegerType, StructType, ArrayType, example } from \"@elaraai/east\";"
       ],
       "source": "// Encode a value to Beast v1 binary format\n// inputs: []  returns: new Uint8Array([\n        69, 97, 115, 116, 0, 234, 87, 255,\n        6,\n        128, 0, 0, 0, 0, 0, 0, 42,\n    ])\nEast.function([], BlobType, ($) => {\n        const value = $.const(42n, IntegerType);\n        return East.Blob.encodeBeast(value, 'v1');\n    })"
     },
@@ -1710,7 +1710,7 @@
         "deserialization"
       ],
       "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
+        "import { East, BlobType, StringType, IntegerType, StructType, ArrayType, example } from \"@elaraai/east\";"
       ],
       "source": "// Decode a Beast v1 blob back to a typed value\n// inputs: []  returns: 42n\nEast.function([], IntegerType, ($) => {\n        const value = $.const(42n, IntegerType);\n        const encoded = $.let(East.Blob.encodeBeast(value, 'v1'));\n        return encoded.decodeBeast(IntegerType, 'v1');\n    })"
     },
@@ -1731,7 +1731,7 @@
         "serialization"
       ],
       "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
+        "import { East, BlobType, StringType, IntegerType, StructType, ArrayType, example } from \"@elaraai/east\";"
       ],
       "source": "// Encode a value to Beast v2 binary format\n// inputs: []  returns: new Uint8Array([\n        137, 69, 97, 115, 116, 13, 10, 1,\n        8,\n        84,\n    ])\nEast.function([], BlobType, ($) => {\n        const value = $.const(42n, IntegerType);\n        return East.Blob.encodeBeast(value, 'v2');\n    })"
     },
@@ -1752,7 +1752,7 @@
         "deserialization"
       ],
       "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
+        "import { East, BlobType, StringType, IntegerType, StructType, ArrayType, example } from \"@elaraai/east\";"
       ],
       "source": "// Decode a Beast v2 blob back to a typed value\n// inputs: []  returns: 42n\nEast.function([], IntegerType, ($) => {\n        const value = $.const(42n, IntegerType);\n        const encoded = $.let(East.Blob.encodeBeast(value, 'v2'));\n        return encoded.decodeBeast(IntegerType, 'v2');\n    })"
     },
@@ -1772,86 +1772,9 @@
         "tabular"
       ],
       "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
+        "import { East, BlobType, StringType, IntegerType, StructType, ArrayType, example } from \"@elaraai/east\";"
       ],
       "source": "// Decode a CSV blob into an array of structs\n// inputs: []  returns: [{ name: \"Alice\", age: 30n }, { name: \"Bob\", age: 25n }]\nEast.function([], ArrayType(StructType({ name: StringType, age: IntegerType })), ($) => {\n        const csv = $.const(new TextEncoder().encode(\"name,age\\nAlice,30\\nBob,25\"), BlobType);\n        return csv.decodeCsv(StructType({ name: StringType, age: IntegerType }));\n    })"
-    },
-    {
-      "id": "east:blob.examples.ts:blobEq",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/blob.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check blob equality with eq alias",
-      "keywords": [
-        "blob",
-        "BlobType",
-        "eq",
-        "equality",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check blob equality with eq alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const b = $.const(Uint8Array.from([1, 2, 3]), BlobType);\n        return b.eq(Uint8Array.from([1, 2, 3]));\n    })"
-    },
-    {
-      "id": "east:blob.examples.ts:blobNe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/blob.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check blob inequality with ne alias",
-      "keywords": [
-        "blob",
-        "BlobType",
-        "ne",
-        "notEqual",
-        "inequality",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check blob inequality with ne alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const b = $.const(Uint8Array.from([1, 2, 3]), BlobType);\n        return b.ne(Uint8Array.from([1, 2]));\n    })"
-    },
-    {
-      "id": "east:blob.examples.ts:blobEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/blob.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check blob equality with equal method",
-      "keywords": [
-        "blob",
-        "BlobType",
-        "equal",
-        "equality",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check blob equality with equal method\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const b = $.const(Uint8Array.from([1, 2, 3]), BlobType);\n        return b.equal(Uint8Array.from([1, 2, 3]));\n    })"
-    },
-    {
-      "id": "east:blob.examples.ts:blobNotEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/blob.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check blob inequality with notEqual method",
-      "keywords": [
-        "blob",
-        "BlobType",
-        "notEqual",
-        "inequality",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, BlobType, StringType, IntegerType, BooleanType, StructType, ArrayType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check blob inequality with notEqual method\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const b = $.const(Uint8Array.from([1, 2, 3]), BlobType);\n        return b.notEqual(Uint8Array.from([1, 2]));\n    })"
     },
     {
       "id": "east:block.examples.ts:blockConst",
@@ -2399,82 +2322,6 @@
         "import { East, BooleanType, IntegerType, StringType, example } from \"@elaraai/east\";"
       ],
       "source": "// Short-circuit AND capturing outer variables\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const threshold = $.const(5n, IntegerType);\n        const value = $.const(3n, IntegerType);\n        return East.greater(value, 0n).and(_$ => East.less(value, threshold));\n    })"
-    },
-    {
-      "id": "east:boolean.examples.ts:booleanEq",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/boolean.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check boolean equality with eq alias",
-      "keywords": [
-        "boolean",
-        "BooleanType",
-        "eq",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, BooleanType, IntegerType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check boolean equality with eq alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(true, BooleanType);\n        return x.eq(true);\n    })"
-    },
-    {
-      "id": "east:boolean.examples.ts:booleanNe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/boolean.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check boolean inequality with ne alias",
-      "keywords": [
-        "boolean",
-        "BooleanType",
-        "ne",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, BooleanType, IntegerType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check boolean inequality with ne alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(true, BooleanType);\n        return x.ne(false);\n    })"
-    },
-    {
-      "id": "east:boolean.examples.ts:booleanEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/boolean.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check boolean equality with equal alias",
-      "keywords": [
-        "boolean",
-        "BooleanType",
-        "equal",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, BooleanType, IntegerType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check boolean equality with equal alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(true, BooleanType);\n        return x.equal(true);\n    })"
-    },
-    {
-      "id": "east:boolean.examples.ts:booleanNotEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/boolean.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check boolean inequality with notEqual alias",
-      "keywords": [
-        "boolean",
-        "BooleanType",
-        "notEqual",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, BooleanType, IntegerType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check boolean inequality with notEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(true, BooleanType);\n        return x.notEqual(false);\n    })"
     },
     {
       "id": "east:datetime.examples.ts:datetimeGetYear",
@@ -3545,272 +3392,6 @@
       "source": "// Parse a formatted string into a datetime\n// inputs: []  returns: new Date(\"2025-01-15T14:30:45.000Z\")\nEast.function([], DateTimeType, ($) => {\n        return East.DateTime.parseFormatted(\"2025-01-15 14:30:45\", \"YYYY-MM-DD HH:mm:ss\");\n    })"
     },
     {
-      "id": "east:datetime.examples.ts:datetimeEq",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check datetime equality with eq alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "eq",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime equality with eq alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-01-01T00:00:00.000Z\"), DateTimeType);\n        return d.eq(new Date(\"2024-01-01T00:00:00.000Z\"));\n    })"
-    },
-    {
-      "id": "east:datetime.examples.ts:datetimeNe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check datetime inequality with ne alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "ne",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime inequality with ne alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-01-01T00:00:00.000Z\"), DateTimeType);\n        return d.ne(new Date(\"2024-06-15T12:30:00.000Z\"));\n    })"
-    },
-    {
-      "id": "east:datetime.examples.ts:datetimeGt",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check datetime greater-than with gt alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "gt",
-        "greaterThan",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime greater-than with gt alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-06-15T12:30:00.000Z\"), DateTimeType);\n        return d.gt(new Date(\"2024-01-01T00:00:00.000Z\"));\n    })"
-    },
-    {
-      "id": "east:datetime.examples.ts:datetimeLt",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check datetime less-than with lt alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "lt",
-        "lessThan",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime less-than with lt alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-01-01T00:00:00.000Z\"), DateTimeType);\n        return d.lt(new Date(\"2024-06-15T12:30:00.000Z\"));\n    })"
-    },
-    {
-      "id": "east:datetime.examples.ts:datetimeGte",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check datetime greater-or-equal with gte alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "gte",
-        "greaterThanOrEqual",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime greater-or-equal with gte alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-01-01T00:00:00.000Z\"), DateTimeType);\n        return d.gte(new Date(\"2024-01-01T00:00:00.000Z\"));\n    })"
-    },
-    {
-      "id": "east:datetime.examples.ts:datetimeLte",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check datetime less-or-equal with lte alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "lte",
-        "lessThanOrEqual",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime less-or-equal with lte alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-01-01T00:00:00.000Z\"), DateTimeType);\n        return d.lte(new Date(\"2024-06-15T12:30:00.000Z\"));\n    })"
-    },
-    {
-      "id": "east:datetime.examples.ts:datetimeGe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check datetime greater-or-equal with ge alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "ge",
-        "greaterEqual",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime greater-or-equal with ge alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-06-15T12:30:00.000Z\"), DateTimeType);\n        return d.ge(new Date(\"2024-01-01T00:00:00.000Z\"));\n    })"
-    },
-    {
-      "id": "east:datetime.examples.ts:datetimeLe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check datetime less-or-equal with le alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "le",
-        "lessEqual",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime less-or-equal with le alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-01-01T00:00:00.000Z\"), DateTimeType);\n        return d.le(new Date(\"2024-06-15T12:30:00.000Z\"));\n    })"
-    },
-    {
-      "id": "east:datetime.examples.ts:datetimeEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Medium)",
-      "test": "Check datetime equality with equal alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "equal",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime equality with equal alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-01-01T00:00:00.000Z\"), DateTimeType);\n        return d.equal(new Date(\"2024-01-01T00:00:00.000Z\"));\n    })"
-    },
-    {
-      "id": "east:datetime.examples.ts:datetimeNotEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Medium)",
-      "test": "Check datetime inequality with notEqual alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "notEqual",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime inequality with notEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-01-01T00:00:00.000Z\"), DateTimeType);\n        return d.notEqual(new Date(\"2024-06-15T12:30:00.000Z\"));\n    })"
-    },
-    {
-      "id": "east:datetime.examples.ts:datetimeGreater",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Medium)",
-      "test": "Check datetime greater-than with greater alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "greater",
-        "comparison",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime greater-than with greater alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-06-15T12:30:00.000Z\"), DateTimeType);\n        return d.greater(new Date(\"2024-01-01T00:00:00.000Z\"));\n    })"
-    },
-    {
-      "id": "east:datetime.examples.ts:datetimeLess",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Medium)",
-      "test": "Check datetime less-than with less alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "less",
-        "comparison",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime less-than with less alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-01-01T00:00:00.000Z\"), DateTimeType);\n        return d.less(new Date(\"2024-06-15T12:30:00.000Z\"));\n    })"
-    },
-    {
-      "id": "east:datetime.examples.ts:datetimeGreaterEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Medium)",
-      "test": "Check datetime greater-or-equal with greaterEqual alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "greaterEqual",
-        "comparison",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime greater-or-equal with greaterEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-01-01T00:00:00.000Z\"), DateTimeType);\n        return d.greaterEqual(new Date(\"2024-01-01T00:00:00.000Z\"));\n    })"
-    },
-    {
-      "id": "east:datetime.examples.ts:datetimeLessEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/datetime.examples.ts",
-      "suite": "Comparison Aliases (Medium)",
-      "test": "Check datetime less-or-equal with lessEqual alias",
-      "keywords": [
-        "datetime",
-        "DateTimeType",
-        "lessEqual",
-        "comparison",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DateTimeType, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check datetime less-or-equal with lessEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Date(\"2024-01-01T00:00:00.000Z\"), DateTimeType);\n        return d.lessEqual(new Date(\"2024-06-15T12:30:00.000Z\"));\n    })"
-    },
-    {
       "id": "east:dict.examples.ts:dictSize",
       "skill": "east",
       "package": "east",
@@ -4608,82 +4189,6 @@
       "source": "// Group dict values and reduce each group with an init and combine function\n// inputs: []  returns: new Map([[0n, 12n], [1n, 14n]])\nEast.function([], DictType(IntegerType, IntegerType), ($) => {\n        const d = $.const(new Map([[\"a\", 1n], [\"b\", 2n], [\"c\", 3n]]), DictType(StringType, IntegerType));\n        return d.groupReduce((_$, v, _k) => v.remainder(2n), (_$, _k2) => 10n, (_$, a, b, _k) => a.add(b));\n    })"
     },
     {
-      "id": "east:dict.examples.ts:dictEq",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/dict.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check dict equality with eq alias",
-      "keywords": [
-        "dict",
-        "DictType",
-        "eq",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DictType, IntegerType, StringType, BooleanType, FloatType, SetType, ArrayType, example, some, none } from \"@elaraai/east\";"
-      ],
-      "source": "// Check dict equality with eq alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Map([[1n, \"a\"], [2n, \"b\"]]), DictType(IntegerType, StringType));\n        return d.eq(new Map([[1n, \"a\"], [2n, \"b\"]]));\n    })"
-    },
-    {
-      "id": "east:dict.examples.ts:dictNe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/dict.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check dict inequality with ne alias",
-      "keywords": [
-        "dict",
-        "DictType",
-        "ne",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DictType, IntegerType, StringType, BooleanType, FloatType, SetType, ArrayType, example, some, none } from \"@elaraai/east\";"
-      ],
-      "source": "// Check dict inequality with ne alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Map([[1n, \"a\"], [2n, \"b\"]]), DictType(IntegerType, StringType));\n        return d.ne(new Map([[1n, \"a\"]]));\n    })"
-    },
-    {
-      "id": "east:dict.examples.ts:dictEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/dict.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check dict equality with equal alias",
-      "keywords": [
-        "dict",
-        "DictType",
-        "equal",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DictType, IntegerType, StringType, BooleanType, FloatType, SetType, ArrayType, example, some, none } from \"@elaraai/east\";"
-      ],
-      "source": "// Check dict equality with equal alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Map([[1n, \"a\"], [2n, \"b\"]]), DictType(IntegerType, StringType));\n        return d.equal(new Map([[1n, \"a\"], [2n, \"b\"]]));\n    })"
-    },
-    {
-      "id": "east:dict.examples.ts:dictNotEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/dict.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check dict inequality with notEqual alias",
-      "keywords": [
-        "dict",
-        "DictType",
-        "notEqual",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, DictType, IntegerType, StringType, BooleanType, FloatType, SetType, ArrayType, example, some, none } from \"@elaraai/east\";"
-      ],
-      "source": "// Check dict inequality with notEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const d = $.const(new Map([[1n, \"a\"], [2n, \"b\"]]), DictType(IntegerType, StringType));\n        return d.notEqual(new Map([[1n, \"a\"]]));\n    })"
-    },
-    {
       "id": "east:east.examples.ts:eastValue",
       "skill": "east",
       "package": "east",
@@ -4699,7 +4204,7 @@
       "imports": [
         "import { East, IntegerType, StringType, BooleanType, ArrayType, StructType, OptionType, some, example } from \"@elaraai/east\";"
       ],
-      "source": "// Create an East value from a JavaScript literal\n// inputs: []  returns: 42n\nEast.function([], IntegerType, ($) => {\n        return East.value(42n);\n    })"
+      "source": "// Create an East value from a JavaScript literal\n// inputs: []  returns: 42n\nEast.function([], IntegerType, ($) => {\n        return $.const(42n, IntegerType);\n    })"
     },
     {
       "id": "east:east.examples.ts:eastValueWithType",
@@ -4718,7 +4223,7 @@
       "imports": [
         "import { East, IntegerType, StringType, BooleanType, ArrayType, StructType, OptionType, some, example } from \"@elaraai/east\";"
       ],
-      "source": "// Create an East value with an explicit type annotation\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const v = East.value(some(5n), OptionType(IntegerType));\n        return East.equal(v, some(5n));\n    })"
+      "source": "// Create an East value with an explicit type annotation\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const v = $.const(some(5n), OptionType(IntegerType));\n        return East.equal(v, some(5n));\n    })"
     },
     {
       "id": "east:east.examples.ts:eastFunction",
@@ -4736,7 +4241,7 @@
       "imports": [
         "import { East, IntegerType, StringType, BooleanType, ArrayType, StructType, OptionType, some, example } from \"@elaraai/east\";"
       ],
-      "source": "// Define and call an East function with arguments\n// inputs: []  returns: 15n\nEast.function([], IntegerType, ($) => {\n        const add = East.function([IntegerType, IntegerType], IntegerType, ($, x, y) => {\n            return x.add(y);\n        });\n        return add(5n, 10n);\n    })"
+      "source": "// Define and call an East function with arguments\n// inputs: []  returns: 15n\nEast.function([], IntegerType, ($) => {\n        const add = $.const(East.function([IntegerType, IntegerType], IntegerType, ($, x, y) => {\n            return x.add(y);\n        }));\n        return add(5n, 10n);\n    })"
     },
     {
       "id": "east:east.examples.ts:eastStr",
@@ -5601,443 +5106,6 @@
       "source": "// Format a float as a percentage string\n// inputs: []  returns: \"12.34%\"\nEast.function([], StringType, ($) => {\n        return East.Float.printPercentage(0.1234, 2n);\n    })"
     },
     {
-      "id": "east:float.examples.ts:floatEq",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check float equality with eq alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "eq",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float equality with eq alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.eq(10.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatNe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check float inequality with ne alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "ne",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float inequality with ne alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.ne(5.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatGt",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check float greater-than with gt alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "gt",
-        "greaterThan",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float greater-than with gt alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.gt(5.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatLt",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check float less-than with lt alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "lt",
-        "lessThan",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float less-than with lt alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(5.0, FloatType);\n        return x.lt(10.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatGte",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check float greater-or-equal with gte alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "gte",
-        "greaterThanOrEqual",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float greater-or-equal with gte alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.gte(10.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatLte",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check float less-or-equal with lte alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "lte",
-        "lessThanOrEqual",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float less-or-equal with lte alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(5.0, FloatType);\n        return x.lte(10.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatGe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check float greater-or-equal with ge alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "ge",
-        "greaterEqual",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float greater-or-equal with ge alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.ge(5.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatLe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Short)",
-      "test": "Check float less-or-equal with le alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "le",
-        "lessEqual",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float less-or-equal with le alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(5.0, FloatType);\n        return x.le(10.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Medium)",
-      "test": "Check float equality with equal alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "equal",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float equality with equal alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.equal(10.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatNotEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Medium)",
-      "test": "Check float inequality with notEqual alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "notEqual",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float inequality with notEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.notEqual(5.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatGreater",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Medium)",
-      "test": "Check float greater-than with greater alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "greater",
-        "comparison",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float greater-than with greater alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.greater(5.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatLess",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Medium)",
-      "test": "Check float less-than with less alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "less",
-        "comparison",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float less-than with less alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(5.0, FloatType);\n        return x.less(10.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatGreaterEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Medium)",
-      "test": "Check float greater-or-equal with greaterEqual alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "greaterEqual",
-        "comparison",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float greater-or-equal with greaterEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.greaterEqual(10.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatLessEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Comparison Aliases (Medium)",
-      "test": "Check float less-or-equal with lessEqual alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "lessEqual",
-        "comparison",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check float less-or-equal with lessEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(5.0, FloatType);\n        return x.lessEqual(10.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatPlus",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Arithmetic Aliases",
-      "test": "Add two floats with plus alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "plus",
-        "add",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Add two floats with plus alias\n// inputs: []  returns: 15.0\nEast.function([], FloatType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.plus(5.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatSub",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Arithmetic Aliases",
-      "test": "Subtract two floats with sub alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "sub",
-        "subtract",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Subtract two floats with sub alias\n// inputs: []  returns: 5.0\nEast.function([], FloatType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.sub(5.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatMinus",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Arithmetic Aliases",
-      "test": "Subtract two floats with minus alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "minus",
-        "subtract",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Subtract two floats with minus alias\n// inputs: []  returns: 5.0\nEast.function([], FloatType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.minus(5.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatMul",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Arithmetic Aliases",
-      "test": "Multiply two floats with mul alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "mul",
-        "multiply",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Multiply two floats with mul alias\n// inputs: []  returns: 50.0\nEast.function([], FloatType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.mul(5.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatTimes",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Arithmetic Aliases",
-      "test": "Multiply two floats with times alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "times",
-        "multiply",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Multiply two floats with times alias\n// inputs: []  returns: 50.0\nEast.function([], FloatType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.times(5.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatDiv",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Arithmetic Aliases",
-      "test": "Divide two floats with div alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "div",
-        "divide",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Divide two floats with div alias\n// inputs: []  returns: 2.0\nEast.function([], FloatType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.div(5.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatMod",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Arithmetic Aliases",
-      "test": "Get float remainder with mod alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "mod",
-        "remainder",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Get float remainder with mod alias\n// inputs: []  returns: 1.0\nEast.function([], FloatType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.mod(3.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatRem",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Arithmetic Aliases",
-      "test": "Get float remainder with rem alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "rem",
-        "remainder",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Get float remainder with rem alias\n// inputs: []  returns: 1.0\nEast.function([], FloatType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.rem(3.0);\n    })"
-    },
-    {
-      "id": "east:float.examples.ts:floatModulo",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/float.examples.ts",
-      "suite": "Arithmetic Aliases",
-      "test": "Get float remainder with modulo alias",
-      "keywords": [
-        "float",
-        "FloatType",
-        "modulo",
-        "remainder",
-        "alias"
-      ],
-      "imports": [
-        "import { East, FloatType, IntegerType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Get float remainder with modulo alias\n// inputs: []  returns: 1.0\nEast.function([], FloatType, ($) => {\n        const x = $.const(10.0, FloatType);\n        return x.modulo(3.0);\n    })"
-    },
-    {
       "id": "east:function.examples.ts:functionSimpleCall",
       "skill": "east",
       "package": "east",
@@ -6053,7 +5121,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Create and call a simple function with one argument\n// inputs: []  returns: 6n\nEast.function([], IntegerType, ($) => {\n        const addOne = East.function([IntegerType], IntegerType, ($, x) => {\n            return x.add(1n);\n        });\n        return addOne(5n);\n    })"
+      "source": "// Create and call a simple function with one argument\n// inputs: []  returns: 6n\nEast.function([], IntegerType, ($) => {\n        const addOne = $.const(East.function([IntegerType], IntegerType, ($, x) => {\n            return x.add(1n);\n        }));\n        return addOne(5n);\n    })"
     },
     {
       "id": "east:function.examples.ts:functionMultipleArgs",
@@ -6070,7 +5138,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Create and call a function with multiple arguments\n// inputs: []  returns: 7n\nEast.function([], IntegerType, ($) => {\n        const add = East.function([IntegerType, IntegerType], IntegerType, ($, a, b) => {\n            return a.add(b);\n        });\n        return add(3n, 4n);\n    })"
+      "source": "// Create and call a function with multiple arguments\n// inputs: []  returns: 7n\nEast.function([], IntegerType, ($) => {\n        const add = $.const(East.function([IntegerType, IntegerType], IntegerType, ($, a, b) => {\n            return a.add(b);\n        }));\n        return add(3n, 4n);\n    })"
     },
     {
       "id": "east:function.examples.ts:functionNoArgs",
@@ -6088,7 +5156,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Create and call a function with no arguments\n// inputs: []  returns: 42n\nEast.function([], IntegerType, ($) => {\n        const getFortyTwo = East.function([], IntegerType, _$ => {\n            return 42n;\n        });\n        return getFortyTwo();\n    })"
+      "source": "// Create and call a function with no arguments\n// inputs: []  returns: 42n\nEast.function([], IntegerType, ($) => {\n        const getFortyTwo = $.const(East.function([], IntegerType, _$ => {\n            return 42n;\n        }));\n        return getFortyTwo();\n    })"
     },
     {
       "id": "east:function.examples.ts:functionReturningNull",
@@ -6107,7 +5175,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Create a function that returns null\n// inputs: []\nEast.function([], NullType, ($) => {\n        const doNothing = East.function([], NullType, _$ => {\n            return null;\n        });\n        $(doNothing());\n    })"
+      "source": "// Create a function that returns null\n// inputs: []\nEast.function([], NullType, ($) => {\n        const doNothing = $.const(East.function([], NullType, _$ => {\n            return null;\n        }));\n        $(doNothing());\n    })"
     },
     {
       "id": "east:function.examples.ts:functionStoredInVariable",
@@ -6143,7 +5211,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Pass a function as an argument to another function\n// inputs: []  returns: 10n\nEast.function([], IntegerType, ($) => {\n        const apply = East.function(\n            [FunctionType([IntegerType], IntegerType), IntegerType],\n            IntegerType,\n            ($, f, x) => {\n                return f(x);\n            }\n        );\n        const double = East.function([IntegerType], IntegerType, ($, x) => x.multiply(2n));\n        return apply(double, 5n);\n    })"
+      "source": "// Pass a function as an argument to another function\n// inputs: []  returns: 10n\nEast.function([], IntegerType, ($) => {\n        const apply = $.const(East.function(\n            [FunctionType([IntegerType], IntegerType), IntegerType],\n            IntegerType,\n            ($, f, x) => {\n                return f(x);\n            }\n        ));\n        const double = $.const(East.function([IntegerType], IntegerType, ($, x) => x.multiply(2n)));\n        return apply(double, 5n);\n    })"
     },
     {
       "id": "east:function.examples.ts:functionReturningFunction",
@@ -6161,7 +5229,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Return a function from another function (currying)\n// inputs: []  returns: 15n\nEast.function([], IntegerType, ($) => {\n        const makeAdder = East.function([IntegerType], FunctionType([IntegerType], IntegerType), ($, n) => {\n            return East.function([IntegerType], IntegerType, ($, x) => x.add(n));\n        });\n        const addFive = makeAdder(5n);\n        return addFive(10n);\n    })"
+      "source": "// Return a function from another function (currying)\n// inputs: []  returns: 15n\nEast.function([], IntegerType, ($) => {\n        const makeAdder = $.const(East.function([IntegerType], FunctionType([IntegerType], IntegerType), ($, n) => {\n            return East.function([IntegerType], IntegerType, ($, x) => x.add(n));\n        }));\n        const addFive = $.let(makeAdder(5n));\n        return addFive(10n);\n    })"
     },
     {
       "id": "east:function.examples.ts:functionNestedCalls",
@@ -6179,7 +5247,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Compose nested function calls\n// inputs: []  returns: 18n\nEast.function([], IntegerType, ($) => {\n        const square = East.function([IntegerType], IntegerType, ($, x) => x.multiply(x));\n        const double = East.function([IntegerType], IntegerType, ($, x) => x.multiply(2n));\n        return double(square(3n));\n    })"
+      "source": "// Compose nested function calls\n// inputs: []  returns: 18n\nEast.function([], IntegerType, ($) => {\n        const square = $.const(East.function([IntegerType], IntegerType, ($, x) => x.multiply(x)));\n        const double = $.const(East.function([IntegerType], IntegerType, ($, x) => x.multiply(2n)));\n        return double(square(3n));\n    })"
     },
     {
       "id": "east:function.examples.ts:functionEarlyReturn",
@@ -6198,7 +5266,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Function with early return using $.if and $.return\n// inputs: []  returns: 5n\nEast.function([], IntegerType, ($) => {\n        const absValue = East.function([IntegerType], IntegerType, ($, x) => {\n            $.if(East.less(x, 0n), $ => {\n                $.return(x.negate());\n            });\n            return x;\n        });\n        return absValue(-5n);\n    })"
+      "source": "// Function with early return using $.if and $.return\n// inputs: []  returns: 5n\nEast.function([], IntegerType, ($) => {\n        const absValue = $.const(East.function([IntegerType], IntegerType, ($, x) => {\n            $.if(East.less(x, 0n), $ => {\n                $.return(x.negate());\n            });\n            return x;\n        }));\n        return absValue(-5n);\n    })"
     },
     {
       "id": "east:function.examples.ts:functionClosure",
@@ -6217,7 +5285,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Create a closure that captures an outer variable\n// inputs: []  returns: 12n\nEast.function([], IntegerType, ($) => {\n        const multiplier = $.const(3n, IntegerType);\n        const multiplyByThree = East.function([IntegerType], IntegerType, ($, x) => {\n            return x.multiply(multiplier);\n        });\n        return multiplyByThree(4n);\n    })"
+      "source": "// Create a closure that captures an outer variable\n// inputs: []  returns: 12n\nEast.function([], IntegerType, ($) => {\n        const multiplier = $.const(3n, IntegerType);\n        const multiplyByThree = $.const(East.function([IntegerType], IntegerType, ($, x) => {\n            return x.multiply(multiplier);\n        }));\n        return multiplyByThree(4n);\n    })"
     },
     {
       "id": "east:function.examples.ts:functionClosureMultipleCaptures",
@@ -6235,7 +5303,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Create a closure that captures multiple outer variables\n// inputs: []  returns: 65n\nEast.function([], IntegerType, ($) => {\n        const offset = $.const(100n, IntegerType);\n        const multiplier = $.const(3n, IntegerType);\n        const divisor = $.const(2n, IntegerType);\n        const transform = East.function([IntegerType], IntegerType, ($, x) => {\n            const scaled = $.let(x.multiply(multiplier));\n            const shifted = $.let(scaled.add(offset));\n            return shifted.divide(divisor);\n        });\n        return transform(10n);\n    })"
+      "source": "// Create a closure that captures multiple outer variables\n// inputs: []  returns: 65n\nEast.function([], IntegerType, ($) => {\n        const offset = $.const(100n, IntegerType);\n        const multiplier = $.const(3n, IntegerType);\n        const divisor = $.const(2n, IntegerType);\n        const transform = $.const(East.function([IntegerType], IntegerType, ($, x) => {\n            const scaled = $.let(x.multiply(multiplier));\n            const shifted = $.let(scaled.add(offset));\n            return shifted.divide(divisor);\n        }));\n        return transform(10n);\n    })"
     },
     {
       "id": "east:function.examples.ts:functionStringArg",
@@ -6253,7 +5321,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Create a function with string argument and return\n// inputs: []  returns: \"Hello, World!\"\nEast.function([], StringType, ($) => {\n        const greet = East.function([StringType], StringType, ($, name) => {\n            return East.str`Hello, ${name}!`;\n        });\n        return greet(\"World\");\n    })"
+      "source": "// Create a function with string argument and return\n// inputs: []  returns: \"Hello, World!\"\nEast.function([], StringType, ($) => {\n        const greet = $.const(East.function([StringType], StringType, ($, name) => {\n            return East.str`Hello, ${name}!`;\n        }));\n        return greet(\"World\");\n    })"
     },
     {
       "id": "east:function.examples.ts:functionInStruct",
@@ -6308,7 +5376,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Create and call a simple async function\n// inputs: []  returns: \"Hello, async!\"\nEast.asyncFunction([], StringType, ($) => {\n        const asyncGreet = East.asyncFunction([], StringType, _$ => {\n            return \"Hello, async!\";\n        });\n        return asyncGreet();\n    })"
+      "source": "// Create and call a simple async function\n// inputs: []  returns: \"Hello, async!\"\nEast.asyncFunction([], StringType, ($) => {\n        const asyncGreet = $.const(East.asyncFunction([], StringType, _$ => {\n            return \"Hello, async!\";\n        }));\n        return asyncGreet();\n    })"
     },
     {
       "id": "east:function.examples.ts:asyncFunctionChain",
@@ -6327,7 +5395,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Async function that calls another async function\n// inputs: []  returns: 20n\nEast.asyncFunction([], IntegerType, ($) => {\n        const asyncDouble = East.asyncFunction([IntegerType], IntegerType, (_$, x) => {\n            return x.multiply(2n);\n        });\n        const asyncQuadruple = East.asyncFunction([IntegerType], IntegerType, ($, x) => {\n            const doubled = $.let(asyncDouble(x));\n            return asyncDouble(doubled);\n        });\n        return asyncQuadruple(5n);\n    })"
+      "source": "// Async function that calls another async function\n// inputs: []  returns: 20n\nEast.asyncFunction([], IntegerType, ($) => {\n        const asyncDouble = $.const(East.asyncFunction([IntegerType], IntegerType, (_$, x) => {\n            return x.multiply(2n);\n        }));\n        const asyncQuadruple = $.const(East.asyncFunction([IntegerType], IntegerType, ($, x) => {\n            const doubled = $.let(asyncDouble(x));\n            return asyncDouble(doubled);\n        }));\n        return asyncQuadruple(5n);\n    })"
     },
     {
       "id": "east:function.examples.ts:functionSerializeBeast",
@@ -6346,7 +5414,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Serialize a function to BEAST2 and deserialize it back\n// inputs: []  returns: 42n\nEast.function([], IntegerType, ($) => {\n        const FnType = FunctionType([IntegerType], IntegerType);\n        const addOne = East.function([IntegerType], IntegerType, ($, x) => {\n            return x.add(1n);\n        });\n        const blob = $.let(East.Blob.encodeBeast(addOne, 'v2'));\n        const decoded = $.let(blob.decodeBeast(FnType, 'v2'));\n        return decoded(41n);\n    })"
+      "source": "// Serialize a function to BEAST2 and deserialize it back\n// inputs: []  returns: 42n\nEast.function([], IntegerType, ($) => {\n        const FnType = FunctionType([IntegerType], IntegerType);\n        const addOne = $.const(East.function([IntegerType], IntegerType, ($, x) => {\n            return x.add(1n);\n        }));\n        const blob = $.let(East.Blob.encodeBeast(addOne, 'v2'));\n        const decoded = $.let(blob.decodeBeast(FnType, 'v2'));\n        return decoded(41n);\n    })"
     },
     {
       "id": "east:function.examples.ts:functionSerializeMultipleParams",
@@ -6365,7 +5433,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Serialize a multi-param function to BEAST2\n// inputs: []  returns: 30n\nEast.function([], IntegerType, ($) => {\n        const FnType = FunctionType([IntegerType, IntegerType], IntegerType);\n        const add = East.function([IntegerType, IntegerType], IntegerType, ($, a, b) => {\n            return a.add(b);\n        });\n        const blob = $.let(East.Blob.encodeBeast(add, 'v2'));\n        const decoded = $.let(blob.decodeBeast(FnType, 'v2'));\n        return decoded(10n, 20n);\n    })"
+      "source": "// Serialize a multi-param function to BEAST2\n// inputs: []  returns: 30n\nEast.function([], IntegerType, ($) => {\n        const FnType = FunctionType([IntegerType, IntegerType], IntegerType);\n        const add = $.const(East.function([IntegerType, IntegerType], IntegerType, ($, a, b) => {\n            return a.add(b);\n        }));\n        const blob = $.let(East.Blob.encodeBeast(add, 'v2'));\n        const decoded = $.let(blob.decodeBeast(FnType, 'v2'));\n        return decoded(10n, 20n);\n    })"
     },
     {
       "id": "east:function.examples.ts:functionSerializeControlFlow",
@@ -6384,7 +5452,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Serialize a function with control flow (if/return) to BEAST2\n// inputs: []  returns: 5n\nEast.function([], IntegerType, ($) => {\n        const FnType = FunctionType([IntegerType], IntegerType);\n        const abs = East.function([IntegerType], IntegerType, ($, x) => {\n            $.if(East.less(x, 0n), ($) => {\n                $.return(x.negate());\n            });\n            return x;\n        });\n        const blob = $.let(East.Blob.encodeBeast(abs, 'v2'));\n        const decoded = $.let(blob.decodeBeast(FnType, 'v2'));\n        return decoded(-5n);\n    })"
+      "source": "// Serialize a function with control flow (if/return) to BEAST2\n// inputs: []  returns: 5n\nEast.function([], IntegerType, ($) => {\n        const FnType = FunctionType([IntegerType], IntegerType);\n        const abs = $.const(East.function([IntegerType], IntegerType, ($, x) => {\n            $.if(East.less(x, 0n), ($) => {\n                $.return(x.negate());\n            });\n            return x;\n        }));\n        const blob = $.let(East.Blob.encodeBeast(abs, 'v2'));\n        const decoded = $.let(blob.decodeBeast(FnType, 'v2'));\n        return decoded(-5n);\n    })"
     },
     {
       "id": "east:function.examples.ts:functionSerializeLoop",
@@ -6403,7 +5471,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Serialize a function with a loop to BEAST2\n// inputs: []  returns: 15n\nEast.function([], IntegerType, ($) => {\n        const FnType = FunctionType([IntegerType], IntegerType);\n        const sumTo = East.function([IntegerType], IntegerType, ($, n) => {\n            const sum = $.let(0n);\n            const i = $.let(1n);\n            $.while(East.lessEqual(i, n), ($) => {\n                $.assign(sum, sum.add(i));\n                $.assign(i, i.add(1n));\n            });\n            return sum;\n        });\n        const blob = $.let(East.Blob.encodeBeast(sumTo, 'v2'));\n        const decoded = $.let(blob.decodeBeast(FnType, 'v2'));\n        return decoded(5n);\n    })"
+      "source": "// Serialize a function with a loop to BEAST2\n// inputs: []  returns: 15n\nEast.function([], IntegerType, ($) => {\n        const FnType = FunctionType([IntegerType], IntegerType);\n        const sumTo = $.const(East.function([IntegerType], IntegerType, ($, n) => {\n            const sum = $.let(0n);\n            const i = $.let(1n);\n            $.while(East.lessEqual(i, n), ($) => {\n                $.assign(sum, sum.add(i));\n                $.assign(i, i.add(1n));\n            });\n            return sum;\n        }));\n        const blob = $.let(East.Blob.encodeBeast(sumTo, 'v2'));\n        const decoded = $.let(blob.decodeBeast(FnType, 'v2'));\n        return decoded(5n);\n    })"
     },
     {
       "id": "east:function.examples.ts:functionSerializeArrayOfFunctions",
@@ -6541,7 +5609,7 @@
       "imports": [
         "import { East, IntegerType, NullType, StringType, FunctionType, AsyncFunctionType, StructType, ArrayType, BlobType, example } from \"@elaraai/east\";"
       ],
-      "source": "// Serialize a nested closure (closure returning closure) to BEAST2\n// inputs: []  returns: 42n\nEast.function([], IntegerType, ($) => {\n        const InnerFnType = FunctionType([IntegerType], IntegerType);\n        const makeAdder = East.function([IntegerType], InnerFnType, ($, n) => {\n            return East.function([IntegerType], IntegerType, ($, x) => {\n                return x.add(n);\n            });\n        });\n        const addFive = $.let(makeAdder(5n));\n        const blob = $.let(East.Blob.encodeBeast(addFive, 'v2'));\n        const decoded = $.let(blob.decodeBeast(InnerFnType, 'v2'));\n        return decoded(37n);\n    })"
+      "source": "// Serialize a nested closure (closure returning closure) to BEAST2\n// inputs: []  returns: 42n\nEast.function([], IntegerType, ($) => {\n        const InnerFnType = FunctionType([IntegerType], IntegerType);\n        const makeAdder = $.const(East.function([IntegerType], InnerFnType, ($, n) => {\n            return East.function([IntegerType], IntegerType, ($, x) => {\n                return x.add(n);\n            });\n        }));\n        const addFive = $.let(makeAdder(5n));\n        const blob = $.let(East.Blob.encodeBeast(addFive, 'v2'));\n        const decoded = $.let(blob.decodeBeast(InnerFnType, 'v2'));\n        return decoded(37n);\n    })"
     },
     {
       "id": "east:function.examples.ts:closureSerializeStructCapture",
@@ -7265,709 +6333,6 @@
         "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
       ],
       "source": "// Clamp an integer within a min/max range\n// inputs: []  returns: 10n\nEast.function([], IntegerType, ($) => {\n        const x = $.const(15n, IntegerType);\n        return East.clamp(x, 1n, 10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEq",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check equality using eq alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "eq",
-        "alias",
-        "equality"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check equality using eq alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.eq(10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerNe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check inequality using ne alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "ne",
-        "alias",
-        "inequality"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check inequality using ne alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.ne(5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerGt",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check greater than using gt alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "gt",
-        "alias",
-        "greater than"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check greater than using gt alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.gt(5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerLt",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check less than using lt alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "lt",
-        "alias",
-        "less than"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check less than using lt alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(5n, IntegerType);\n        return x.lt(10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerGte",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check greater than or equal using gte alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "gte",
-        "alias",
-        "greater than or equal"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check greater than or equal using gte alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.gte(10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerLte",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check less than or equal using lte alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "lte",
-        "alias",
-        "less than or equal"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check less than or equal using lte alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(5n, IntegerType);\n        return x.lte(10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerGe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check greater than or equal using ge alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "ge",
-        "alias",
-        "greater than or equal"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check greater than or equal using ge alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.ge(5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerLe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check less than or equal using le alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "le",
-        "alias",
-        "less than or equal"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check less than or equal using le alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(5n, IntegerType);\n        return x.le(10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check equality using equal alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "equal",
-        "alias",
-        "equality"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check equality using equal alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.equal(10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerNotEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check inequality using notEqual alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "notEqual",
-        "alias",
-        "inequality"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check inequality using notEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.notEqual(5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerGreater",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check greater than using greater alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "greater",
-        "alias",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check greater than using greater alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.greater(5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerLess",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check less than using less alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "less",
-        "alias",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check less than using less alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(5n, IntegerType);\n        return x.less(10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerGreaterEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check greater than or equal using greaterEqual alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "greaterEqual",
-        "alias",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check greater than or equal using greaterEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.greaterEqual(10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerLessEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Comparison method aliases",
-      "test": "Check less than or equal using lessEqual alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "lessEqual",
-        "alias",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check less than or equal using lessEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(5n, IntegerType);\n        return x.lessEqual(10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerPlus",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Arithmetic method aliases",
-      "test": "Add two integers using plus alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "plus",
-        "alias",
-        "addition"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Add two integers using plus alias\n// inputs: []  returns: 15n\nEast.function([], IntegerType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.plus(5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerSub",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Arithmetic method aliases",
-      "test": "Subtract using sub alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "sub",
-        "alias",
-        "subtraction"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Subtract using sub alias\n// inputs: []  returns: 5n\nEast.function([], IntegerType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.sub(5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerMinus",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Arithmetic method aliases",
-      "test": "Subtract using minus alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "minus",
-        "alias",
-        "subtraction"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Subtract using minus alias\n// inputs: []  returns: 5n\nEast.function([], IntegerType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.minus(5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerMul",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Arithmetic method aliases",
-      "test": "Multiply using mul alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "mul",
-        "alias",
-        "multiplication"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Multiply using mul alias\n// inputs: []  returns: 50n\nEast.function([], IntegerType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.mul(5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerTimes",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Arithmetic method aliases",
-      "test": "Multiply using times alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "times",
-        "alias",
-        "multiplication"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Multiply using times alias\n// inputs: []  returns: 50n\nEast.function([], IntegerType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.times(5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerDiv",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Arithmetic method aliases",
-      "test": "Divide using div alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "div",
-        "alias",
-        "division"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Divide using div alias\n// inputs: []  returns: 2n\nEast.function([], IntegerType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.div(5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerMod",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Arithmetic method aliases",
-      "test": "Get remainder using mod alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "mod",
-        "alias",
-        "modulo"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Get remainder using mod alias\n// inputs: []  returns: 1n\nEast.function([], IntegerType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.mod(3n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerRem",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Arithmetic method aliases",
-      "test": "Get remainder using rem alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "rem",
-        "alias",
-        "remainder"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Get remainder using rem alias\n// inputs: []  returns: 1n\nEast.function([], IntegerType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.rem(3n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerModulo",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Arithmetic method aliases",
-      "test": "Get remainder using modulo alias",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "modulo",
-        "alias",
-        "remainder"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Get remainder using modulo alias\n// inputs: []  returns: 1n\nEast.function([], IntegerType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return x.modulo(3n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastEquals",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check equality using East.equals standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.equals",
-        "standalone",
-        "equality"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check equality using East.equals standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return East.equals(x, 10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastEq",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check equality using East.eq standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.eq",
-        "standalone",
-        "equality"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check equality using East.eq standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return East.eq(x, 10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastNotEquals",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check inequality using East.notEquals standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.notEquals",
-        "standalone",
-        "inequality"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check inequality using East.notEquals standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return East.notEquals(x, 5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastNe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check inequality using East.ne standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.ne",
-        "standalone",
-        "inequality"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check inequality using East.ne standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return East.ne(x, 5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastLessThan",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check less than using East.lessThan standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.lessThan",
-        "standalone",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check less than using East.lessThan standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(5n, IntegerType);\n        return East.lessThan(x, 10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastLt",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check less than using East.lt standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.lt",
-        "standalone",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check less than using East.lt standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(5n, IntegerType);\n        return East.lt(x, 10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastGreaterThan",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check greater than using East.greaterThan standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.greaterThan",
-        "standalone",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check greater than using East.greaterThan standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return East.greaterThan(x, 5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastGt",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check greater than using East.gt standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.gt",
-        "standalone",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check greater than using East.gt standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return East.gt(x, 5n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastLessThanOrEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check less than or equal using East.lessThanOrEqual standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.lessThanOrEqual",
-        "standalone",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check less than or equal using East.lessThanOrEqual standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return East.lessThanOrEqual(x, 10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastLte",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check less than or equal using East.lte standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.lte",
-        "standalone",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check less than or equal using East.lte standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return East.lte(x, 10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastLe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check less than or equal using East.le standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.le",
-        "standalone",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check less than or equal using East.le standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return East.le(x, 10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastGreaterThanOrEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check greater than or equal using East.greaterThanOrEqual standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.greaterThanOrEqual",
-        "standalone",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check greater than or equal using East.greaterThanOrEqual standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return East.greaterThanOrEqual(x, 10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastGte",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check greater than or equal using East.gte standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.gte",
-        "standalone",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check greater than or equal using East.gte standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return East.gte(x, 10n);\n    })"
-    },
-    {
-      "id": "east:integer.examples.ts:integerEastGe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/integer.examples.ts",
-      "suite": "Standalone function aliases",
-      "test": "Check greater than or equal using East.ge standalone function",
-      "keywords": [
-        "integer",
-        "IntegerType",
-        "East.ge",
-        "standalone",
-        "comparison"
-      ],
-      "imports": [
-        "import { East, IntegerType, FloatType, BooleanType, StringType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check greater than or equal using East.ge standalone function\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const x = $.const(10n, IntegerType);\n        return East.ge(x, 10n);\n    })"
     },
     {
       "id": "east:integer.examples.ts:integerToFloat",
@@ -9849,86 +8214,6 @@
       "source": "// Group set elements by key and reduce each group with an init and combiner\n// inputs: []  returns: new Map([[0n, 12n], [1n, 14n]])\nEast.function([], DictType(IntegerType, IntegerType), ($) => {\n        const s = $.const(new Set([1n, 2n, 3n]), SetType(IntegerType));\n        return s.groupReduce((_$, x) => x.remainder(2n), (_$, _k) => 10n, (_$, a, b) => a.add(b));\n    })"
     },
     {
-      "id": "east:set.examples.ts:setEq",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/set.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check set equality with eq alias",
-      "keywords": [
-        "set",
-        "SetType",
-        "eq",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, Expr, IntegerType, FloatType, SetType, StringType, BooleanType, DictType, some, none, example } from \"@elaraai/east\";",
-        "import type { option } from \"@elaraai/east\";"
-      ],
-      "source": "// Check set equality with eq alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(new Set([1n, 2n, 3n]), SetType(IntegerType));\n        return s.eq(new Set([1n, 2n, 3n]));\n    })"
-    },
-    {
-      "id": "east:set.examples.ts:setNe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/set.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check set inequality with ne alias",
-      "keywords": [
-        "set",
-        "SetType",
-        "ne",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, Expr, IntegerType, FloatType, SetType, StringType, BooleanType, DictType, some, none, example } from \"@elaraai/east\";",
-        "import type { option } from \"@elaraai/east\";"
-      ],
-      "source": "// Check set inequality with ne alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(new Set([1n, 2n, 3n]), SetType(IntegerType));\n        return s.ne(new Set([1n, 2n]));\n    })"
-    },
-    {
-      "id": "east:set.examples.ts:setEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/set.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check set equality with equal alias",
-      "keywords": [
-        "set",
-        "SetType",
-        "equal",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, Expr, IntegerType, FloatType, SetType, StringType, BooleanType, DictType, some, none, example } from \"@elaraai/east\";",
-        "import type { option } from \"@elaraai/east\";"
-      ],
-      "source": "// Check set equality with equal alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(new Set([1n, 2n, 3n]), SetType(IntegerType));\n        return s.equal(new Set([1n, 2n, 3n]));\n    })"
-    },
-    {
-      "id": "east:set.examples.ts:setNotEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/set.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check set inequality with notEqual alias",
-      "keywords": [
-        "set",
-        "SetType",
-        "notEqual",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, Expr, IntegerType, FloatType, SetType, StringType, BooleanType, DictType, some, none, example } from \"@elaraai/east\";",
-        "import type { option } from \"@elaraai/east\";"
-      ],
-      "source": "// Check set inequality with notEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(new Set([1n, 2n, 3n]), SetType(IntegerType));\n        return s.notEqual(new Set([1n, 2n]));\n    })"
-    },
-    {
       "id": "east:string.examples.ts:stringPrint",
       "skill": "east",
       "package": "east",
@@ -10423,272 +8708,6 @@
       "source": "// Check if a string is lexically greater than or equal to another\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"hello\");\n        return s.greaterThanOrEqual(\"hello\");\n    })"
     },
     {
-      "id": "east:string.examples.ts:stringEq",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string equality with eq alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "eq",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string equality with eq alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"hello\");\n        return s.eq(\"hello\");\n    })"
-    },
-    {
-      "id": "east:string.examples.ts:stringNe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string inequality with ne alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "ne",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string inequality with ne alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"hello\");\n        return s.ne(\"world\");\n    })"
-    },
-    {
-      "id": "east:string.examples.ts:stringGt",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string greater than with gt alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "gt",
-        "greater",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string greater than with gt alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"world\");\n        return s.gt(\"hello\");\n    })"
-    },
-    {
-      "id": "east:string.examples.ts:stringLt",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string less than with lt alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "lt",
-        "less",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string less than with lt alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"hello\");\n        return s.lt(\"world\");\n    })"
-    },
-    {
-      "id": "east:string.examples.ts:stringGte",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string greater than or equal with gte alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "gte",
-        "greaterEqual",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string greater than or equal with gte alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"hello\");\n        return s.gte(\"hello\");\n    })"
-    },
-    {
-      "id": "east:string.examples.ts:stringLte",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string less than or equal with lte alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "lte",
-        "lessEqual",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string less than or equal with lte alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"hello\");\n        return s.lte(\"world\");\n    })"
-    },
-    {
-      "id": "east:string.examples.ts:stringGe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string greater than or equal with ge alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "ge",
-        "greaterEqual",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string greater than or equal with ge alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"world\");\n        return s.ge(\"hello\");\n    })"
-    },
-    {
-      "id": "east:string.examples.ts:stringLe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string less than or equal with le alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "le",
-        "lessEqual",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string less than or equal with le alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"hello\");\n        return s.le(\"world\");\n    })"
-    },
-    {
-      "id": "east:string.examples.ts:stringEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string equality with equal alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "equal",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string equality with equal alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"hello\");\n        return s.equal(\"hello\");\n    })"
-    },
-    {
-      "id": "east:string.examples.ts:stringNotEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string inequality with notEqual alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "notEqual",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string inequality with notEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"hello\");\n        return s.notEqual(\"world\");\n    })"
-    },
-    {
-      "id": "east:string.examples.ts:stringGreater",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string greater than with greater alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "greater",
-        "ordering",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string greater than with greater alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"world\");\n        return s.greater(\"hello\");\n    })"
-    },
-    {
-      "id": "east:string.examples.ts:stringLess",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string less than with less alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "less",
-        "ordering",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string less than with less alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"hello\");\n        return s.less(\"world\");\n    })"
-    },
-    {
-      "id": "east:string.examples.ts:stringGreaterEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string greater than or equal with greaterEqual alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "greaterEqual",
-        "ordering",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string greater than or equal with greaterEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"hello\");\n        return s.greaterEqual(\"hello\");\n    })"
-    },
-    {
-      "id": "east:string.examples.ts:stringLessEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/string.examples.ts",
-      "suite": "Comparison Aliases",
-      "test": "Check string less than or equal with lessEqual alias",
-      "keywords": [
-        "string",
-        "StringType",
-        "lessEqual",
-        "ordering",
-        "alias"
-      ],
-      "imports": [
-        "import { East, ArrayType, IntegerType, StringType, BooleanType, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check string less than or equal with lessEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const s = $.const(\"hello\");\n        return s.lessEqual(\"world\");\n    })"
-    },
-    {
       "id": "east:struct.examples.ts:structFieldAccess",
       "skill": "east",
       "package": "east",
@@ -11086,82 +9105,6 @@
         "import { East, Expr, IntegerType, NullType, OptionType, VariantType, BooleanType, StringType, variant, example } from \"@elaraai/east\";"
       ],
       "source": "// Check variant inequality with notEquals\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const v = $.const(variant(\"some\", 42n), OptionType(IntegerType));\n        return v.notEquals(variant(\"some\", 43n));\n    })"
-    },
-    {
-      "id": "east:variant.examples.ts:variantEq",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/variant.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check variant equality with eq alias",
-      "keywords": [
-        "variant",
-        "VariantType",
-        "eq",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, Expr, IntegerType, NullType, OptionType, VariantType, BooleanType, StringType, variant, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check variant equality with eq alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const v = $.const(variant(\"some\", 42n), OptionType(IntegerType));\n        return v.eq(variant(\"some\", 42n));\n    })"
-    },
-    {
-      "id": "east:variant.examples.ts:variantNe",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/variant.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check variant inequality with ne alias",
-      "keywords": [
-        "variant",
-        "VariantType",
-        "ne",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, Expr, IntegerType, NullType, OptionType, VariantType, BooleanType, StringType, variant, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check variant inequality with ne alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const v = $.const(variant(\"some\", 42n), OptionType(IntegerType));\n        return v.ne(variant(\"some\", 43n));\n    })"
-    },
-    {
-      "id": "east:variant.examples.ts:variantEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/variant.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check variant equality with equal alias",
-      "keywords": [
-        "variant",
-        "VariantType",
-        "equal",
-        "equality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, Expr, IntegerType, NullType, OptionType, VariantType, BooleanType, StringType, variant, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check variant equality with equal alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const v = $.const(variant(\"some\", 42n), OptionType(IntegerType));\n        return v.equal(variant(\"some\", 42n));\n    })"
-    },
-    {
-      "id": "east:variant.examples.ts:variantNotEqual",
-      "skill": "east",
-      "package": "east",
-      "file": "east/test/variant.examples.ts",
-      "suite": "Equality Aliases",
-      "test": "Check variant inequality with notEqual alias",
-      "keywords": [
-        "variant",
-        "VariantType",
-        "notEqual",
-        "inequality",
-        "alias"
-      ],
-      "imports": [
-        "import { East, Expr, IntegerType, NullType, OptionType, VariantType, BooleanType, StringType, variant, example } from \"@elaraai/east\";"
-      ],
-      "source": "// Check variant inequality with notEqual alias\n// inputs: []  returns: true\nEast.function([], BooleanType, ($) => {\n        const v = $.const(variant(\"some\", 42n), OptionType(IntegerType));\n        return v.notEqual(variant(\"some\", 43n));\n    })"
     },
     {
       "id": "east:vector.examples.ts:vectorZeros",
