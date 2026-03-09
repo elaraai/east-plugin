@@ -144,6 +144,7 @@ e3 package remove <repo> <pkg>           # Remove package
 e3 workspace create <repo> <name>           # Create workspace
 e3 workspace deploy <repo> <ws> <pkg[@ver]> # Deploy package
 e3 workspace export <repo> <ws> <zipPath>   # Export workspace
+e3 workspace import <repo> <ws> <zipPath>   # Import package zip into workspace
 e3 workspace list <repo>                    # List workspaces
 e3 workspace status <repo> <ws>             # Show workspace status
 e3 workspace remove <repo> <ws>             # Remove workspace
@@ -153,7 +154,9 @@ e3 workspace remove <repo> <ws>             # Remove workspace
 
 ```bash
 e3 list <repo> [path]                       # List tree contents
-e3 tree <repo> <path>                       # Show full tree structure
+e3 list <repo> <path> -r                    # List all dataset paths recursively
+e3 list <repo> <path> -l                    # Immediate children with type/status/size
+e3 list <repo> <path> -r -l                 # All datasets with type/status/size
 e3 get <repo> <path> [-f east|json|beast2]  # Get dataset value
 e3 set <repo> <path> <file> [--type <spec>] # Set dataset from file
 ```
@@ -184,9 +187,11 @@ e3 convert [input] [--from <fmt>] [--to <fmt>] [-o <output>]
 ### Authentication (for remote servers)
 
 ```bash
-e3 login <url>                    # Authenticate with remote server
-e3 logout <url>                   # Clear stored credentials
-e3 auth status                    # Show authentication status
+e3 login <server>                 # Log in using OAuth2 Device Flow
+e3 logout <server>                # Log out and clear credentials
+e3 auth status                    # List all saved credentials
+e3 auth token <server>            # Print access token (for curl/debugging)
+e3 auth whoami [server]           # Show current identity
 ```
 
 ### Remote URLs

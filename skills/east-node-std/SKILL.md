@@ -43,7 +43,7 @@ Task → What do you need?
     │   └─ Delete → .deleteFile()
     │
     ├─ Fetch (HTTP requests)
-    │   └─ .get(), .post(), .request()
+    │   └─ .get(), .getBytes(), .post(), .request()
     │
     ├─ Crypto (hashing, UUIDs, random bytes)
     │   └─ .uuid(), .randomBytes(), .hashSha256(), .hashSha256Bytes()
@@ -76,6 +76,11 @@ const compiled = East.compile(myFunction.toIR(), NodePlatform);
 ```typescript
 const compiled = East.compile(myFunction.toIR(), [...Console.Implementation, ...FileSystem.Implementation]);
 ```
+
+## Reference Documentation
+
+- **[API Reference](./reference/api.md)** - Complete function signatures, types, and arguments for all modules
+- **[Examples](./reference/examples.md)** - Working code examples by use case
 
 ## Available Modules
 
