@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import MiniSearch from "minisearch";
 
-export const MIN_SCORE = 50;
+export const MIN_SCORE = 5;
 
 interface IndexEntry {
   id: number;
