@@ -1881,7 +1881,7 @@ var wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 var SPACE_OR_PUNCTUATION = /[\n\r\p{Z}\p{P}]+/u;
 
 // lib/search.ts
-var MIN_SCORE = 50;
+var MIN_SCORE = 5;
 async function buildSearchIndex(indexPath) {
   const raw = await readFile2(indexPath, "utf-8");
   const data = JSON.parse(raw);
